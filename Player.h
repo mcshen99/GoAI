@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ostream>
-#include "Move.h"
 #include "Board.h"
 
 class Player {
