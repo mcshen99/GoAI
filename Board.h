@@ -5,33 +5,36 @@
 #include <ostream>
 #include <vector>
 
-typedef std::pair<int, int> pos;
-
 const int SIZE = 9;
 
 struct Board {
 private:
 	const int dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
-	std::array<std::array<int, SIZE>, SIZE> board_;
 
-	bool inBounds(pos position);
+	mutable std::array<std::array<int, SIZE>, SIZE> board_;
 
-	std::vector<pos> getCaptured(pos position, int color);
+	std::vector<pos> getCaptured(pos position, int color) const;
 
-	bool isSuicide(const Move& move);
+	
 
 public:
 	Board();
-
+	
+	bool isSuicide(const Move& move) const;
+	
 	const std::array<std::array<int, SIZE>, SIZE>& getBoard() const;
 
-	bool canMove(const Move& m);
+	bool canMove(const Move& m) const;
 
 	void move(const Move& m);
 
 	bool operator==(const Board& b) const;
 
-	std::array<std::array<int, SIZE>, SIZE> score(std::vector<pos> locations);
+	std::array<std::array<int, SIZE>, SIZE> score(std::vector<pos> locations) const;
+
+	int size() const { return SIZE; }
+
+	bool inBounds(pos position) const;
 };
 
 std::ostream& operator<<(std::ostream& s, const Board& b);

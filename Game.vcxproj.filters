@@ -16,6 +16,12 @@
     <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CommandLinePlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\RandomPlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\RandomPlayoutPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeLists.txt" />

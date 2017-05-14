@@ -10,11 +10,11 @@ using std::array;
 using std::vector;
 using std::cout;
 
-bool Board::inBounds(pos position) {
+bool Board::inBounds(pos position) const {
 	return position.first >= 0 && position.first < SIZE && position.second >= 0 && position.second < SIZE;
 }
 
-vector<pos> Board::getCaptured(pos position, int color) {
+vector<pos> Board::getCaptured(pos position, int color) const {
 	vector<pos> v;
 	queue<pos> q;
 
@@ -57,7 +57,7 @@ vector<pos> Board::getCaptured(pos position, int color) {
 	return v;
 }
 
-bool Board::isSuicide(const Move& move) {
+bool Board::isSuicide(const Move& move) const {
 	const pos& p = move.getCoor();
 	int c = move.getColor();
 	board_[p.first][p.second] = c;
@@ -94,7 +94,7 @@ const array<array<int, SIZE>, SIZE>& Board::getBoard() const {
 	return board_;
 }
 
-bool Board::canMove(const Move& m) {
+bool Board::canMove(const Move& m) const {
 	if (!inBounds(m.getCoor())) {
 		return false;
 	}
@@ -142,7 +142,7 @@ bool Board::operator==(const Board& b) const {
 	return board_ == b.board_;
 }
 
-array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) {
+array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) const {
 	array<array<int, SIZE>, SIZE> deadBoard = board_;
 
 	queue<pos> q;

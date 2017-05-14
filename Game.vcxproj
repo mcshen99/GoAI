@@ -91,11 +91,11 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -268,6 +268,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\Board.cpp"  />
     <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\Player.cpp"  />
     <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CommandLinePlayer.cpp"  />
+    <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\RandomPlayout.cpp"  />
+    <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\RandomPlayoutPlayer.cpp"  />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:/Users/Michelle/Dropbox/Computer Science/C++/Go/ZERO_CHECK.vcxproj">
