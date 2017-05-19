@@ -57,6 +57,49 @@ vector<pos> Board::getCaptured(pos position, int color) const {
 	return v;
 }
 
+int Board::liberties(pos p) const {
+	queue<pos> q;
+
+	int color = board_[p.first][p.second];
+	if (color == 0) {
+		return true;
+	}
+
+	q.push(p);
+
+	array<array<bool, SIZE>, SIZE> visited = { false };
+	visited[p.first][p.second] = true;
+	int count = 0;
+
+	while (!q.empty()) {
+		pos& next = q.front();
+		q.pop();
+
+		int a = next.first;
+		int b = next.second;
+		visited[a][b] = true;
+
+		for (int i = 0; i < 4; ++i) {
+			int x = a + dirs[0][i];
+			int y = b + dirs[1][i];
+			if (!inBounds({ x, y }) || visited[x][y]) {
+				continue;
+			}
+
+			if (board_[x][y] == 0) {
+				visited[x][y] = true;
+				count++;
+			}
+
+			if (board_[x][y] == color) {
+				q.push({ x, y });
+			}
+		}
+	}
+
+	return count;
+}
+
 bool Board::isSuicide(const Move& move) const {
 	const pos& p = move.getCoor();
 	int c = move.getColor();

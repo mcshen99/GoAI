@@ -14,7 +14,11 @@ private:
 
 	std::vector<double> komi_;
 
-	//pair<bool, vector<pos>> fix_atari(pos position, pos coor, bool singlept_ok = false, bool twolib_test = true, bool twolib_edgeonly = false);
+	bool isGroup(const Board& board, const Move& m);
+
+	bool isAtari(const Board& board, const Move& m);
+
+	bool isCapture(const Board& board, const Move& m);
 
 public:
 	RandomPlayout(std::vector<double> komi);

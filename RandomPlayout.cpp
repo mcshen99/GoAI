@@ -48,60 +48,68 @@ std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player)
 		}
 	}
 
+//	for (int i = 0; i < SIZE; ++i) {
+//		for (int j = 0; j < SIZE; ++j) {
+//			vector<pos> liberties;
+//
+//			if (!grouped[i][j] && brd[i][j] == player) {
+//				queue<pos> q;
+//				array<array<bool, SIZE>, SIZE> visited = { false };
+//				q.push({ i, j });
+//				visited[i][j] = true;
+//
+//				while (!q.empty()) {
+//					pos& next = q.front();
+//					q.pop();
+//
+//					int a = next.first;
+//					int b = next.second;
+//					visited[a][b] = true;
+//					grouped[a][b] = true;
+//
+//					for (int i = 0; i < 4; ++i) {
+//						int x = a + dirs[0][i];
+//						int y = b + dirs[1][i];
+//						if (!board.inBounds({ x, y }) || visited[x][y]) {
+//							continue;
+//						}
+//
+//						if (brd[x][y] == brd[i][j]) {
+//							q.push({ x, y });
+//						} else if (brd[x][y] == 0) {
+//							visited[x][y] = true;
+//							liberties.push_back({ x, y });
+//						}
+//					}
+//				}
+//			}
+//
+//			if (liberties.size() <= 2) {
+//				for (const pos& p : liberties) {
+//					gens.erase(p);
+//				}
+//			}
+//		}
+//	}
+
 	for (int i = 0; i < SIZE; ++i) {
 		for (int j = 0; j < SIZE; ++j) {
-			vector<pos> liberties;
-
-			if (!grouped[i][j] && brd[i][j] == player) {
-				queue<pos> q;
-				array<array<bool, SIZE>, SIZE> visited = { false };
-				q.push({ i, j });
-				visited[i][j] = true;
-
-				while (!q.empty()) {
-					pos& next = q.front();
-					q.pop();
-
-					int a = next.first;
-					int b = next.second;
-					visited[a][b] = true;
-					grouped[a][b] = true;
-
-					for (int i = 0; i < 4; ++i) {
-						int x = a + dirs[0][i];
-						int y = b + dirs[1][i];
-						if (!board.inBounds({ x, y }) || visited[x][y]) {
-							continue;
-						}
-
-						if (brd[x][y] == brd[i][j]) {
-							q.push({ x, y });
-						} else if (brd[x][y] == 0) {
-							visited[x][y] = true;
-							liberties.push_back({ x, y });
-						}
-					}
-				}
+			if (gens.find({ i, j }) == gens.end()) {
+				continue;
 			}
-
-			if (liberties.size() <= 2) {
-				for (const pos& p : liberties) {
-					gens.erase(p);
-				}
-			}
-		}
-	}
-	
-	for (int i = 0; i < SIZE; ++i) {
-		for (int j = 0; j < SIZE; ++j) {
-			if (gens.find({ i, j }) != gens.end() && board.isSuicide(Move::move({ i, j }, player))) {
+			Move m = Move::move({ i, j }, player);
+			if (board.isSuicide(m) || (isGroup(board, m) && isAtari(board, m) && !isCapture(board, m))) {
 				gens.erase({ i, j });
 			}
 		}
 	}
 
 	if (gens.size() != 0) {
-		std::cout << gens.size() << std::endl;
+		Board print;
+		for (auto& g : gens) {
+			print.move(Move::move(g.first, 3));
+		}
+		std::cout << print << std::endl;
 		double prob = 1.0 / (gens.size());
 
 		for (const auto& it : gens) {
@@ -178,4 +186,54 @@ int RandomPlayout::simulate(Board& board, int player) {
 	}
 
 	return winner;
+}
+
+bool RandomPlayout::isGroup(const Board &board, const Move &m) {
+	const int dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
+
+	pos p = m.getCoor();
+	int c = m.getColor();
+
+	bool group = false;
+	for (int i = 0; i < 4; ++i) {
+		int x = p.first + dirs[0][i];
+		int y = p.second + dirs[1][i];
+		if (board.inBounds({x, y}) && board.getBoard()[x][y] == c) {
+			group = true;
+			break;
+		}
+	}
+
+	return group;
+}
+
+bool RandomPlayout::isAtari(const Board &board, const Move &m) {
+	return Board::placeAndTest(board, { m }, [&m](const Board& b) {
+		return b.liberties(m.getCoor()) == 1;
+	});
+}
+
+bool RandomPlayout::isCapture(const Board &board, const Move &m) {
+	return Board::placeAndTest(board, { m }, [&m](const Board& b) {
+		const int dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
+
+		int c = m.getCoor().first;
+		int d = m.getCoor().second;
+		for (int i = 0; i < 4; ++i) {
+			int x = c + dirs[0][i];
+			int y = d + dirs[1][i];
+			if (!b.inBounds({ x, y })) {
+				continue;
+			}
+			if (b.getBoard()[x][y] == m.getColor()) {
+				continue;
+			}
+			auto captured = b.getCaptured({ x, y }, b.getBoard()[x][y]);
+			if (!captured.empty()) {
+				return true;
+			}
+		}
+
+		return false;
+	});
 }
