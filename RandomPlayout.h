@@ -6,11 +6,11 @@
 
 class RandomPlayout {
 private:
-	const int dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
+	const static int dirs[2][4];
 
-	std::default_random_engine gen_;
+	static std::default_random_engine gen_;
 
-	std::uniform_real_distribution<double> dist_;
+	static std::uniform_real_distribution<double> dist_;
 
 	std::vector<double> komi_;
 

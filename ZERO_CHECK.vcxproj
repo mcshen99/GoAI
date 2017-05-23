@@ -1,20 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="MinSizeRel|Win32">
-      <Configuration>MinSizeRel</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="RelWithDebInfo|Win32">
-      <Configuration>RelWithDebInfo</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -24,28 +12,11 @@
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>ZERO_CHECK</ProjectName>
-    <VisualStudioCMakeGeneratedProject>3.6.20160606-g0391f-MSVC</VisualStudioCMakeGeneratedProject>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+    <VisualStudioCMakeGeneratedProject>3.7.20170106-gd3236-dirty-MSVC_2</VisualStudioCMakeGeneratedProject>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
@@ -60,42 +31,9 @@
   <PropertyGroup Label="UserMacros" />
     <PropertyGroup>
       <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
       <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Midl>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
-      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
-      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
-    </Midl>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Midl>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
-      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
-      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
-    </Midl>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
-    <Midl>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
-      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
-      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
-    </Midl>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <Midl>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
@@ -107,22 +45,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\04f6db54e92435bb9df05352f1cbd1ea\generate.stamp.rule">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Checking Build System</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-HC:/Users/Michelle/Dropbox/Computer Science/C++/Go" "-BC:/Users/Michelle/Dropbox/Computer Science/C++/Go" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "$(SolutionPath)"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/Michelle/Dropbox/Computer Science/C++/Go/CMakeFiles/04f6db54e92435bb9df05352f1cbd1ea/generate.stamp.rule;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCXXCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeRCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeSystem.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Checking Build System</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-HC:/Users/Michelle/Dropbox/Computer Science/C++/Go" "-BC:/Users/Michelle/Dropbox/Computer Science/C++/Go" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "$(SolutionPath)"
+"C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO\2017\COMMUNITY\COMMON7\IDE\COMMONEXTENSIONS\MICROSOFT\CMAKE\CMake\bin\cmake.exe" "-HC:/Users/Michelle/Dropbox/Computer Science/C++/Go" "-BC:/Users/Michelle/Dropbox/Computer Science/C++/Go" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "$(SolutionPath)"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -130,35 +55,9 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/Michelle/Dropbox/Computer Science/C++/Go/CMakeFiles/04f6db54e92435bb9df05352f1cbd1ea/generate.stamp.rule;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCXXCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeRCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeSystem.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/Michelle/Dropbox/Computer Science/C++/Go/CMakeFiles/04f6db54e92435bb9df05352f1cbd1ea/generate.stamp.rule;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\Platform\Windows.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.7\Modules\Platform\WindowsPaths.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.7.20170106-gd3236-dirty-MSVC_2\CMakeCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.7.20170106-gd3236-dirty-MSVC_2\CMakeCXXCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.7.20170106-gd3236-dirty-MSVC_2\CMakeRCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.7.20170106-gd3236-dirty-MSVC_2\CMakeSystem.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Checking Build System</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-HC:/Users/Michelle/Dropbox/Computer Science/C++/Go" "-BC:/Users/Michelle/Dropbox/Computer Science/C++/Go" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "$(SolutionPath)"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/Users/Michelle/Dropbox/Computer Science/C++/Go/CMakeFiles/04f6db54e92435bb9df05352f1cbd1ea/generate.stamp.rule;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCXXCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeRCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeSystem.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Checking Build System</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-HC:/Users/Michelle/Dropbox/Computer Science/C++/Go" "-BC:/Users/Michelle/Dropbox/Computer Science/C++/Go" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "$(SolutionPath)"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/Users/Michelle/Dropbox/Computer Science/C++/Go/CMakeFiles/04f6db54e92435bb9df05352f1cbd1ea/generate.stamp.rule;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeCXXCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeRCCompiler.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\3.6.20160606-g0391f-MSVC\CMakeSystem.cmake;C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

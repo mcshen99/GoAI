@@ -1,16 +1,17 @@
 #pragma once
 
-#include "Game.h"
+#include "Board.h"
+#include "RandomPlayout.h"
 #include <random>
-#include <unordered_map>
 #include <memory>
 #include <algorithm>
+#include <unordered_map>
 #include <vector>
 
 
 struct MonteCarloNode {
 private:
-	static const int kN = 5; // visit 5 times before expanding
+	const int kN = 5; // visit 5 times before expanding
 	static std::default_random_engine gen_;
 	static std::uniform_int_distribution<int> dist_;
 
@@ -31,7 +32,7 @@ public:
 		return x.w_ * 1.0 / x.n_;
 	}
 
-	void initNext(const Game& game);
+	void initNext(const Board& board, int player, const std::vector<double>& komi, std::vector<Board>& playerHistory);
 
-	int select(Board& board);
+	int select(Board& board, int player, const std::vector<double>& komi, std::map<int, std::vector<Board>>& history);
 };

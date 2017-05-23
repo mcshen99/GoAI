@@ -11,8 +11,14 @@ using std::default_random_engine;
 using std::array;
 using std::queue;
 using std::ostream;
+using std::cout;
+using std::endl;
 
-RandomPlayout::RandomPlayout(vector<double> komi) : gen_(), dist_(0.0, 1.0), komi_(komi) {}
+default_random_engine RandomPlayout::gen_;
+uniform_real_distribution<double> RandomPlayout::dist_(0.0, 1.0);
+const int RandomPlayout::dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
+
+RandomPlayout::RandomPlayout(vector<double> komi) : komi_(komi) {}
 
 std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player) {
 	/*if (distribution(generator) < probs["capture"]) {
@@ -105,11 +111,11 @@ std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player)
 	}
 
 	if (gens.size() != 0) {
-		Board print;
-		for (auto& g : gens) {
-			print.move(Move::move(g.first, 3));
-		}
-		std::cout << print << std::endl;
+		//Board print;
+		//for (auto& g : gens) {
+		//	print.move(Move::move(g.first, 3));
+		//}
+		//std::cout << print << std::endl;
 		double prob = 1.0 / (gens.size());
 
 		for (const auto& it : gens) {
@@ -149,12 +155,21 @@ int RandomPlayout::simulate(Board& board, int player) {
 	//if 2 players pass, game ends
 	//need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
 	bool lastPass = false;
-	bool gameOver = false;
-	while (!gameOver) {
-		Move m = move(board, player);
+	Board twoMovesAgo(board);
+	queue<Move> moves;
+
+	for (int count = 0; count < SIZE*SIZE; ++count) {
+		Move m = move(board, player + 1);
+		moves.push(m);
+		if (moves.size() > 2) {
+			Move oldMove = moves.front();
+			moves.pop();
+			twoMovesAgo.move(oldMove);
+		}
+		//cout << m.getColor() << ": " << m.getCoor().first << ", " << m.getCoor().second << endl;
+		//cout << board << endl;
 		if (m.isPass()) {
 			if (lastPass) {
-				gameOver = true;
 				break;
 			} else {
 				lastPass = true;
@@ -162,20 +177,35 @@ int RandomPlayout::simulate(Board& board, int player) {
 		} else {
 			lastPass = false;
 			board.move(m);
+			if (moves.size() >= 2 && twoMovesAgo == board) {
+				//cout << "repeated" << endl;
+				board.move(moves.front());
+				lastPass = true;
+			}
 		}
+		player = (player + 1) % 2;
 	}
+	//cout << "done" << endl;
 	//do score here and return higher one
 	vector<pos> locations;
 	array<array<int, SIZE>, SIZE> territoryBoard = board.score(locations);
+	//cout << "got scores" << endl;
 	vector<double> scores = komi_;
 	for (int i = 0; i < SIZE; ++i) {
 		for (int j = 0; j < SIZE; ++j) {
 			int c = territoryBoard[i][j];
+			//cout << c << endl;
 			if (c != 0) {
 				scores[c - 1]++;
 			}
 		}
 	}
+
+	/*for (int i : scores) {
+		cout << i << " ";
+	}
+	cout << endl;*/
+
 	double maxScore = -1;
 	int winner = -1;
 	for (int i = 0; i < scores.size(); ++i) {

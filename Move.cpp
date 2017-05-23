@@ -42,3 +42,7 @@ ostream& operator<<(ostream &s, const Move &m) {
 
 	return s << m.getColor() << ": " << m.getCoor().first << ", " << m.getCoor().second;
 }
+
+bool Move::operator==(const Move& m) const {
+	return move_ == m.move_ && color_ == m.getColor() && coor_ == m.getCoor();
+}

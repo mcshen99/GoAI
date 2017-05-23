@@ -4,6 +4,7 @@
 #include <array>
 #include <ostream>
 #include <vector>
+#include <unordered_set>
 
 const int SIZE = 9;
 
@@ -12,10 +13,13 @@ private:
 	const static int dirs[2][4];
 
 	mutable std::array<std::array<int, SIZE>, SIZE> board_;
+
 public:
 	bool isSuicide(const Move& move) const;
 
 	int liberties(pos p) const;
+
+	std::vector<Move> getValidMoves(int color, std::vector<Board>& playerHistory) const;
 
 	std::vector<pos> getCaptured(pos position, int color) const;
 

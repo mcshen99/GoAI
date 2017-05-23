@@ -102,6 +102,58 @@ int Board::liberties(pos p) const {
 	return count;
 }
 
+vector<Move> Board::getValidMoves(int color, vector<Board>& playerHistory) const {
+	vector<Move> moves;
+	for (int i = 0; i < SIZE; ++i) {
+		for (int j = 0; j < SIZE; ++j) {
+			Move m = Move::move({ i, j }, color);
+			//use canMove and then move on a copy of the board (only if there are captures) to see if same boardState, for boardstates use board instead of hash, call boardstates history, consider passing
+			//boardstate should only be for the player about to move
+			if (!canMove(m)) {
+				continue;
+			}
+
+			int a = m.getCoor().first;
+			int b = m.getCoor().second;
+			board_[a][b] = m.getColor();
+			
+			vector<pos> allCaptures;
+			for (int i = 0; i < 4; ++i) {
+				int x = a + dirs[0][i];
+				int y = b + dirs[1][i];
+				if (!inBounds({ x, y })) {
+					continue;
+				}
+				if (board_[x][y] == m.getColor()) {
+					continue;
+				}
+				auto captured = getCaptured({ x, y }, board_[x][y]);
+				allCaptures.insert(allCaptures.end(), captured.begin(), captured.end());
+			}
+
+			if (!allCaptures.empty()) {
+				Board newBoard(*this);
+				for (pos p : allCaptures) {
+					newBoard.board_[p.first][p.second] = 0;
+				}
+				if (find(playerHistory.begin(), playerHistory.end(), newBoard) == playerHistory.end()) {
+					moves.push_back(m);
+					playerHistory.push_back(newBoard);
+				}
+			} else {
+				if (find(playerHistory.begin(), playerHistory.end(), *this) == playerHistory.end()) {
+					moves.push_back(m);
+					playerHistory.push_back(*this);
+				}
+			}
+		}
+	}
+
+	moves.push_back(Move::pass(color));
+
+	return moves;
+}
+
 bool Board::isSuicide(const Move& move) const {
 	const pos& p = move.getCoor();
 	int c = move.getColor();

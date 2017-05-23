@@ -22,6 +22,15 @@
     <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\RandomPlayoutPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\Gtp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\MonteCarloNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\MonteCarloPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Michelle\Dropbox\Computer Science\C++\Go\CMakeLists.txt" />
