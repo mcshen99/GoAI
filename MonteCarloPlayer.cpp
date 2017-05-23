@@ -9,10 +9,9 @@ using std::map;
 
 Move MonteCarloPlayer::move(const Board& board) {
 	MonteCarloNode root;
-	int mod = 100;
 	for (int i = 0; i < sims_; i++) {
-		if ((i + 1) % mod == 0) {
-			cout << (i + 1) / mod << "/" << sims_ / mod << endl;
+		if (mod_ > 0 && (i + 1) % mod_ == 0) {
+			cout << (i + 1) / mod_ << "/" << sims_ / mod_ << endl;
 		}
 		Board boardCopy(board);
 		map<int, vector<Board>> history;

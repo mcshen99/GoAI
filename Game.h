@@ -8,9 +8,9 @@
 
 namespace std {
 	template<>
-	struct std::hash<std::pair<int, Board>> {
-		size_t operator()(const std::pair<int, Board>& state) const {
-			return state.first + std::hash<Board>{}(state.second) * 31;
+	struct hash<std::pair<int, Board>> {
+		size_t operator()(const pair<int, Board>& state) const {
+			return state.first + hash<Board>{}(state.second) * 31;
 		}
 	};
 }

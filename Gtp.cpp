@@ -3,6 +3,7 @@
 #include <sstream>
 #include <map>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -15,10 +16,11 @@ void Gtp::run() {
     while (true) {
         string input;
         getline(cin, input);
+
         try {
             string output;
             bool done = process(input, output);
-            cout << output << std::flush;
+            cout << output << flush;
             if (done) {
                 break;
             }
@@ -75,7 +77,11 @@ bool Gtp::process(const string& input, string& output) {
         } else if (cmd == "genmove") {
             color c;
             parse(args, c);
-            output = wrap(id, response(genmove(static_cast<int>(c))));
+            Move m = genmove(static_cast<int>(c));
+            game_.makeMove(m.getColor() - 1, m);
+            output = wrap(id, response(m));
+        } else if (cmd == "showboard") {
+            output = wrap(id, response(showboard()));
         } else if (cmd == "protocol_version") {
             output = wrap(id, response(protocol_version()));
         } else if (cmd == "name") {
@@ -107,6 +113,8 @@ bool Gtp::process(const string& input, string& output) {
         }
     } catch (const GtpException& e) {
         throw GtpException("?" + id + " " + e.getMsg() + "\n\n");
+    } catch (const std::exception& e) {
+        throw GtpException("?" + id + " " + "syntax error" + "\n\n");
     }
 
     return false;
@@ -139,17 +147,19 @@ void Gtp::parse(const string& s, float& f) {
 }
 
 void Gtp::parse(const string& s, Gtp::vertex& v) {
-    if (s == "pass") {
+    string t;
+    std::transform(s.begin(), s.end(), back_inserter(t), ::tolower);
+    if (t == "pass") {
         v = pass;
         return;
     }
 
-    v.first = tolower(s.at(0)) - 'a';
-    if (v.first >= 'i') {
+    v.first = tolower(t.at(0)) - 'a';
+    if (v.first >= 'i' - 'a') {
         v.first--;
     }
 
-    v.second = stoi(s.substr(1)) - 1;
+    v.second = stoi(t.substr(1)) - 1;
 }
 
 void Gtp::parse(const string& s, Gtp::color& c) {
@@ -216,6 +226,15 @@ Move Gtp::genmove(int color) {
     return game_.move(color - 1);
 }
 
+string Gtp::showboard() {
+    stringstream ss;
+    ss << '\n';
+    ss << game_.getBoard();
+    string s = ss.str();
+    s.pop_back();
+    return s;
+}
+
 string Gtp::response() {
     return "";
 }
@@ -242,6 +261,10 @@ std::string Gtp::response(bool b) {
     return b ? "true" : "false";
 }
 
+string Gtp::response(int i) {
+    return to_string(i);
+}
+
 std::string Gtp::response(const std::string& s) {
     return s;
 }
@@ -260,7 +283,7 @@ std::string Gtp::response(const vertex& v) {
         c++;
     }
 
-    return to_string(c) + to_string(v.second);
+    return string(1, c) + to_string(v.second + 1);
 }
 
 std::string Gtp::response(const Move& m) {

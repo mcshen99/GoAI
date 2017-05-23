@@ -2,6 +2,7 @@
 
 #include "MoveType.h"
 #include <utility>
+#include <functional>
 
 typedef std::pair<int, int> pos;
 
@@ -30,14 +31,13 @@ public:
 namespace std {
 	template<>
 	struct hash<Move> {
-		size_t operator()(const Move &move) const {
-			int h = 0;
+		size_t operator()(const Move& move) const {
 			if (move.isResign()) {
-				h = -31;
+				return -31;
 			} else if (!move.isPass()) {
-				h = move.getCoor().first * 31 * 31 + move.getCoor().second * 31 + move.getColor();
+				return move.getCoor().first * 31 * 31 + move.getCoor().second * 31 + move.getColor();
 			}
-			return h;
+			return 0;
 		}
 	};
 }

@@ -33,6 +33,10 @@ public:
         komi_.at(player) = komi;
     }
 
+    const Board& getBoard() const {
+        return board_;
+    }
+
     const std::vector<std::shared_ptr<Player>>& getPlayers() const {
         return players_;
     }
@@ -150,6 +154,8 @@ private:
 
     Move genmove(int color);
 
+    std::string showboard();
+
     std::set<std::string> list_commands() const {
         return {
                 "protocol_version",
@@ -163,6 +169,7 @@ private:
                 "komi",
                 "play",
                 "genmove",
+                "showboard",
         };
     };
 
@@ -171,6 +178,8 @@ private:
     std::string response(const std::set<std::string>& strings);
 
     std::string response(bool b);
+
+    std::string response(int i);
 
     std::string response(const std::string& s);
 

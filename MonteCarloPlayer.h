@@ -5,13 +5,15 @@
 
 class MonteCarloPlayer : public Player {
 private:
-	const int sims_;
-	double winP_;
 	int player_;
 	std::vector<double> komi_;
 
+	const int sims_;
+	int mod_;
+	double winP_;
+
 public:
-	MonteCarloPlayer(int sims, int player, std::vector<double> komi) : sims_(sims), player_(player), komi_(komi) {}
+	MonteCarloPlayer(int color, std::vector<double> komi, int sims = 100, int mod = 0) : player_(color - 1), komi_(komi), sims_(sims), mod_(mod) {}
 
 	Move move(const Board& board) override;
 

@@ -11,8 +11,6 @@ using std::default_random_engine;
 using std::array;
 using std::queue;
 using std::ostream;
-using std::cout;
-using std::endl;
 
 default_random_engine RandomPlayout::gen_;
 uniform_real_distribution<double> RandomPlayout::dist_(0.0, 1.0);
@@ -54,50 +52,6 @@ std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player)
 		}
 	}
 
-//	for (int i = 0; i < SIZE; ++i) {
-//		for (int j = 0; j < SIZE; ++j) {
-//			vector<pos> liberties;
-//
-//			if (!grouped[i][j] && brd[i][j] == player) {
-//				queue<pos> q;
-//				array<array<bool, SIZE>, SIZE> visited = { false };
-//				q.push({ i, j });
-//				visited[i][j] = true;
-//
-//				while (!q.empty()) {
-//					pos& next = q.front();
-//					q.pop();
-//
-//					int a = next.first;
-//					int b = next.second;
-//					visited[a][b] = true;
-//					grouped[a][b] = true;
-//
-//					for (int i = 0; i < 4; ++i) {
-//						int x = a + dirs[0][i];
-//						int y = b + dirs[1][i];
-//						if (!board.inBounds({ x, y }) || visited[x][y]) {
-//							continue;
-//						}
-//
-//						if (brd[x][y] == brd[i][j]) {
-//							q.push({ x, y });
-//						} else if (brd[x][y] == 0) {
-//							visited[x][y] = true;
-//							liberties.push_back({ x, y });
-//						}
-//					}
-//				}
-//			}
-//
-//			if (liberties.size() <= 2) {
-//				for (const pos& p : liberties) {
-//					gens.erase(p);
-//				}
-//			}
-//		}
-//	}
-
 	for (int i = 0; i < SIZE; ++i) {
 		for (int j = 0; j < SIZE; ++j) {
 			if (gens.find({ i, j }) == gens.end()) {
@@ -111,11 +65,6 @@ std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player)
 	}
 
 	if (gens.size() != 0) {
-		//Board print;
-		//for (auto& g : gens) {
-		//	print.move(Move::move(g.first, 3));
-		//}
-		//std::cout << print << std::endl;
 		double prob = 1.0 / (gens.size());
 
 		for (const auto& it : gens) {
@@ -166,8 +115,6 @@ int RandomPlayout::simulate(Board& board, int player) {
 			moves.pop();
 			twoMovesAgo.move(oldMove);
 		}
-		//cout << m.getColor() << ": " << m.getCoor().first << ", " << m.getCoor().second << endl;
-		//cout << board << endl;
 		if (m.isPass()) {
 			if (lastPass) {
 				break;
@@ -178,33 +125,24 @@ int RandomPlayout::simulate(Board& board, int player) {
 			lastPass = false;
 			board.move(m);
 			if (moves.size() >= 2 && twoMovesAgo == board) {
-				//cout << "repeated" << endl;
 				board.move(moves.front());
 				lastPass = true;
 			}
 		}
 		player = (player + 1) % 2;
 	}
-	//cout << "done" << endl;
 	//do score here and return higher one
 	vector<pos> locations;
 	array<array<int, SIZE>, SIZE> territoryBoard = board.score(locations);
-	//cout << "got scores" << endl;
 	vector<double> scores = komi_;
 	for (int i = 0; i < SIZE; ++i) {
 		for (int j = 0; j < SIZE; ++j) {
 			int c = territoryBoard[i][j];
-			//cout << c << endl;
 			if (c != 0) {
 				scores[c - 1]++;
 			}
 		}
 	}
-
-	/*for (int i : scores) {
-		cout << i << " ";
-	}
-	cout << endl;*/
 
 	double maxScore = -1;
 	int winner = -1;
