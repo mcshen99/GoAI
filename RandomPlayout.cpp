@@ -124,13 +124,14 @@ int RandomPlayout::simulate(Board& board, int player) {
 		} else {
 			lastPass = false;
 			board.move(m);
-			if (moves.size() >= 2 && twoMovesAgo == board) {
+			if (moves.size() >= 2 && twoMovesAgo.getHash() == board.getHash() && twoMovesAgo == board) {
 				board.move(moves.front());
 				lastPass = true;
 			}
 		}
 		player = (player + 1) % 2;
 	}
+
 	//do score here and return higher one
 	vector<pos> locations;
 	array<array<int, SIZE>, SIZE> territoryBoard = board.score(locations);

@@ -11,15 +11,19 @@ const int SIZE = 9;
 struct Board {
 private:
 	const static int dirs[2][4];
+	const static std::array<std::array<size_t, SIZE>, SIZE> TABLE;
 
 	mutable std::array<std::array<int, SIZE>, SIZE> board_;
+	size_t hash_;
+
+	static std::array<std::array<size_t, SIZE>, SIZE> getTable();
 
 public:
 	bool isSuicide(const Move& move) const;
 
 	int liberties(pos p) const;
 
-	std::vector<Move> getValidMoves(int color, std::vector<Board>& playerHistory) const;
+	std::vector<Move> getValidMoves(int color, std::unordered_set<size_t>& playerHistory) const;
 
 	std::vector<pos> getCaptured(pos position, int color) const;
 
@@ -36,6 +40,8 @@ public:
 	int size() const { return SIZE; }
 
 	bool inBounds(pos position) const;
+
+	size_t getHash() const;
 
 	template <class Test>
 	static bool placeAndTest(const Board& board, std::vector<Move> moves, Test test) {
@@ -68,16 +74,7 @@ namespace std {
 	template<>
 	struct hash<Board> {
 		size_t operator()(const Board &board) const {
-			auto& b = board.getBoard();
-			int h = 0;
-			for (size_t i = 0; i < b.size(); i++) {
-				for (size_t j = 0; j < b[i].size(); j++) {
-					h *= 31;
-					h += b[i][j];
-				}
-			}
-
-			return h;
+			return board.getHash();
 		}
 	};
 }

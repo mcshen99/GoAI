@@ -32,7 +32,7 @@ public:
 		return x.w_ * 1.0 / x.n_;
 	}
 
-	void initNext(const Board& board, int player, const std::vector<double>& komi, std::vector<Board>& playerHistory);
+	void initNext(const Board& board, int player, const std::vector<double>& komi, std::unordered_set<size_t>& playerHistory);
 
-	int select(Board& board, int player, const std::vector<double>& komi, std::map<int, std::vector<Board>>& history);
+	int select(Board& board, int player, const std::vector<double>& komi, std::map<int, std::unordered_set<size_t>>& history);
 };

@@ -33,19 +33,17 @@ Move MonteCarloNode::move() {
 	return element->first;
 }
 
-void MonteCarloNode::initNext(const Board& board, int player, const vector<double>& komi, vector<Board>& playerHistory) {
-	//idek 
-	vector<Move> moves = board.getValidMoves(player + 1, playerHistory); //instead search every nonsuicidal move, maybe put in board.h (getValidMoves, take in a player and previous board states - store the hash for the board state maybe in montecarlonode), need to recompute history (remember parent)
+void MonteCarloNode::initNext(const Board& board, int player, const vector<double>& komi, unordered_set<size_t>& playerHistory) {
+	vector<Move> moves = board.getValidMoves(player + 1, playerHistory);
 
 	//for each move, add to next
 	for (const auto& it : moves) {
 		next_[it] = std::make_shared<MonteCarloNode>();
-		next_[it]->p_ = (player + 1) % 2; 
+		next_[it]->p_ = (player + 1) % 2;
 	}
 }
 
-int MonteCarloNode::select(Board& board, int player, const vector<double>& komi, map<int, vector<Board>>& history) {
-	//pass in reference to set which contains all previous board states and make sure you don't repeat, every select will add to this history 
+int MonteCarloNode::select(Board& board, int player, const vector<double>& komi, map<int, unordered_set<size_t>>& history) {
 	if (n_ < kN) {
 		RandomPlayout rp(komi);
 		int winner = rp.simulate(board, player); 
@@ -76,7 +74,7 @@ int MonteCarloNode::select(Board& board, int player, const vector<double>& komi,
 	});
 
 	board.move(element->first); 
-	history[((player + 1) % 2)].push_back(board); 
+	history[((player + 1) % 2)].insert(board.getHash());
 	int winner = element->second->select(board, (player + 1) % 2, komi, history); 
 
 	if (winner == p_) {

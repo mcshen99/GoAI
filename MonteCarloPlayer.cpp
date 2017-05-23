@@ -1,5 +1,6 @@
 #include "MonteCarloPlayer.h"
 #include <iostream>
+#include <histedit.h>
 
 using std::ostream;
 using std::cout;
@@ -14,7 +15,7 @@ Move MonteCarloPlayer::move(const Board& board) {
 			cout << (i + 1) / mod_ << "/" << sims_ / mod_ << endl;
 		}
 		Board boardCopy(board);
-		map<int, vector<Board>> history;
+		map<int, std::unordered_set<size_t>> history;
 		root.select(boardCopy, player_, komi_, history);
 	}
 

@@ -2,6 +2,7 @@
 #include <queue>
 #include <ostream>
 #include <iostream>
+#include <random>
 
 using std::queue;
 using std::ostream;
@@ -11,6 +12,7 @@ using std::vector;
 using std::cout;
 
 const int Board::dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
+const std::array<std::array<size_t, SIZE>, SIZE> Board::TABLE = Board::getTable();
 
 bool Board::inBounds(pos position) const {
 	return position.first >= 0 && position.first < SIZE && position.second >= 0 && position.second < SIZE;
@@ -102,7 +104,7 @@ int Board::liberties(pos p) const {
 	return count;
 }
 
-vector<Move> Board::getValidMoves(int color, vector<Board>& playerHistory) const {
+vector<Move> Board::getValidMoves(int color, std::unordered_set<size_t>& playerHistory) const {
 	vector<Move> moves;
 	for (int i = 0; i < SIZE; ++i) {
 		for (int j = 0; j < SIZE; ++j) {
@@ -135,15 +137,14 @@ vector<Move> Board::getValidMoves(int color, vector<Board>& playerHistory) const
 				Board newBoard(*this);
 				for (pos p : allCaptures) {
 					newBoard.board_[p.first][p.second] = 0;
+					newBoard.hash_ ^= (newBoard.board_[p.first][p.second] * TABLE[p.first][p.second]);
 				}
-				if (find(playerHistory.begin(), playerHistory.end(), newBoard) == playerHistory.end()) {
+				if (playerHistory.find(newBoard.getHash()) == playerHistory.end()) {
 					moves.push_back(m);
-					playerHistory.push_back(newBoard);
 				}
 			} else {
-				if (find(playerHistory.begin(), playerHistory.end(), *this) == playerHistory.end()) {
+				if (playerHistory.find(this->getHash()) == playerHistory.end()) {
 					moves.push_back(m);
-					playerHistory.push_back(*this);
 				}
 			}
 		}
@@ -216,6 +217,7 @@ void Board::move(const Move& m) {
 	int a = m.getCoor().first;
 	int b = m.getCoor().second;
 	board_[a][b] = m.getColor();
+	hash_ ^= (m.getColor() * TABLE[a][b]);
 
 	for (int i = 0; i < 4; ++i) {
 		int x = a + dirs[0][i];
@@ -228,6 +230,7 @@ void Board::move(const Move& m) {
 		}
 		auto captured = getCaptured({ x, y }, board_[x][y]);
 		for (pos& p : captured) {
+			hash_ ^= (board_[p.first][p.second] * TABLE[p.first][p.second]);
 			board_[p.first][p.second] = 0;
 		}
 	}
@@ -315,6 +318,23 @@ array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) const {
 	}
 
 	return territoryBoard;
+}
+
+std::array<std::array<size_t, SIZE>, SIZE> Board::getTable() {
+	std::array<std::array<size_t, SIZE>, SIZE> table;
+	std::default_random_engine gen;
+	std::uniform_int_distribution<size_t> dist;
+	for (size_t i = 0; i < SIZE; i++) {
+		for (size_t j = 0; j < SIZE; j++) {
+			table[i][j] = dist(gen);
+		}
+	}
+
+	return table;
+}
+
+size_t Board::getHash() const {
+	return hash_;
 }
 
 ostream& operator<<(ostream& s, const Board& b) {
