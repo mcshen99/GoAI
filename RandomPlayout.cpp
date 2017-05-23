@@ -58,7 +58,7 @@ std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player)
 				continue;
 			}
 			Move m = Move::move({ i, j }, player);
-			if (board.isSuicide(m) || (isGroup(board, m) && isAtari(board, m) && !isCapture(board, m))) {
+			if (!isOkMove(board, m)) {
 				gens.erase({ i, j });
 			}
 		}
@@ -205,4 +205,48 @@ bool RandomPlayout::isCapture(const Board &board, const Move &m) {
 
 		return false;
 	});
+}
+
+bool RandomPlayout::isEyeFilling(const Board& board, const Move& m) {
+	int a = m.getCoor().first;
+	int b = m.getCoor().second;
+
+	for (int i = 0; i < 4; ++i) {
+		int x = a + dirs[0][i];
+		int y = b + dirs[1][i];
+
+		if (!board.inBounds({ x, y })) {
+			continue;
+		}
+
+		if (board.getBoard()[x][y] != m.getColor()) {
+			return false;
+		}
+	}
+
+
+	bool center = true;
+	int count = 0;
+	for (int i = -1; i < 1; i++) {
+		for (int j = -1; j < 1; j++) {
+			int x = a + i;
+			int y = b + j;
+			if (!board.inBounds({ x, y })) {
+				center = false;
+				continue;
+			}
+
+			if (board.getBoard()[x][y] != m.getColor()) {
+				count++;
+			}
+		}
+	}
+
+	// is eye if middle and at most zero-one neighbors are empty
+	return count <= 1 + center;
+}
+
+bool RandomPlayout::isOkMove(const Board& board, const Move& m) {
+	return !(board.isSuicide(m) || (isGroup(board, m) && isAtari(board, m) && !isCapture(board, m)) ||
+			 isEyeFilling(board, m));
 }

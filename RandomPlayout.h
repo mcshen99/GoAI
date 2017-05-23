@@ -25,9 +25,11 @@ private:
 
 	bool isCapture(const Board& board, const Move& m);
 
-	std::map<pos, double> gen_playout(const Board& board, int player);
+	bool isEyeFilling(const Board& board, const Move& m);
 
-	std::map<pos, double> isPlayable(const Board& board, const Move& m);
+	bool isOkMove(const Board& board, const Move& m);
+
+	std::map<pos, double> gen_playout(const Board& board, int player);
 
 public:
 	RandomPlayout(std::vector<double> komi);
