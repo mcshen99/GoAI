@@ -14,7 +14,7 @@ private:
 public:
 	RandomPlayoutPlayer(std::vector<double> komi, int player);
 
-	std::ostream& comment(std::ostream& s) const;
+	std::ostream& comment(std::ostream& s) const override;
 
-	Move move(const Board& board);
+	Move move(const Board& board) override;
 };

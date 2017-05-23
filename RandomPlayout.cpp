@@ -128,7 +128,7 @@ Move RandomPlayout::move(const Board& board, int player) {
 	//list of bad moves: suicide (illegal), next move opponent can kill (self-atari)
 	map<pos, double> possibleMoves = gen_playout(board, player);
 	if (possibleMoves.size() == 0) {
-		return Move::pass();
+		return Move::pass(player);
 	}
 
 	//update to fit with probabilities
@@ -142,7 +142,7 @@ Move RandomPlayout::move(const Board& board, int player) {
 		}
 	}
 
-	return Move::pass();
+	return Move::pass(player);
 }
 
 int RandomPlayout::simulate(Board& board, int player) {

@@ -9,12 +9,10 @@ const int SIZE = 9;
 
 struct Board {
 private:
-	const int dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
+	const static int dirs[2][4];
 
 	mutable std::array<std::array<int, SIZE>, SIZE> board_;
 public:
-	Board();
-	
 	bool isSuicide(const Move& move) const;
 
 	int liberties(pos p) const;

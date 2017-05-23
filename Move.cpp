@@ -15,20 +15,20 @@ int Move::getColor() const {
 }
 
 bool Move::isPass() const {
-	return color_ == 0;
+	return move_ == MoveType::PASS;
 }
 bool Move::isResign() const {
-	return color_ == -1;
+	return move_ == MoveType::RESIGN;
 }
 
 Move Move::move(pos coor, int color) {
 	return { coor, color, MoveType::MOVE };
 }
-Move Move::pass() {
-	return { { -1, -1 } , 0, MoveType::PASS };
+Move Move::pass(int color) {
+	return { { -1, -1 } , color, MoveType::PASS };
 }
-Move Move::resign() {
-	return { { -1, -1 } , -1, MoveType::RESIGN };
+Move Move::resign(int color) {
+	return { { -1, -1 } , color, MoveType::RESIGN };
 }
 
 ostream& operator<<(ostream &s, const Move &m) {

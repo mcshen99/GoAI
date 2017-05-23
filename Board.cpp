@@ -10,6 +10,8 @@ using std::array;
 using std::vector;
 using std::cout;
 
+const int Board::dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
+
 bool Board::inBounds(pos position) const {
 	return position.first >= 0 && position.first < SIZE && position.second >= 0 && position.second < SIZE;
 }
@@ -130,8 +132,6 @@ bool Board::isSuicide(const Move& move) const {
 	board_[p.first][p.second] = 0;
 	return true;
 }
-
-Board::Board() : board_() {}
 
 const array<array<int, SIZE>, SIZE>& Board::getBoard() const {
 	return board_;

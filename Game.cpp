@@ -21,7 +21,7 @@ Game::Game(vector<shared_ptr<Player>> players, vector<double> komi) :
 int Game::run() {
 	while (true) {
 		if (resigned_[player_]) {
-			player_ = player_ + 1 % players_.size();
+			player_ = (player_ + 1) % players_.size();
 			continue;
 		}
 		states_.insert({ player_, board_ });

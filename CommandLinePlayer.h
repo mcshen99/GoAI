@@ -10,7 +10,7 @@ private:
 public:
 	CommandLinePlayer(int color);
 
-	Move move(const Board& board);
+	std::ostream& comment(std::ostream& s) const override;
 
-	std::ostream& comment(std::ostream& s) const;
+	Move move(const Board& board) override;
 };

@@ -21,9 +21,9 @@ Move CommandLinePlayer::move(const Board& board) {
 		string s;
 		getline(cin, s);
 		if (s == "P" || s == "p") {
-			return Move::pass();
+			return Move::pass(color_);
 		} else if (s == "R" || s == "r") {
-			return Move::resign();
+			return Move::resign(color_);
 		} else {
 			try {
 				std::stringstream stream(s);

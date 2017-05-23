@@ -21,6 +21,6 @@ public:
 	bool isResign() const;
 
 	static Move move(pos coor, int color);
-	static Move pass();
-	static Move resign();
+	static Move pass(int color);
+	static Move resign(int color);
 };
