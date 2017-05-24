@@ -12,7 +12,7 @@ private:
 	RandomPlayout playout_;
 
 public:
-	RandomPlayoutPlayer(std::vector<double> komi, int player);
+	RandomPlayoutPlayer(int player, std::vector<double> komi);
 
 	std::ostream& comment(std::ostream& s) const override;
 

@@ -11,4 +11,4 @@ Move RandomPlayoutPlayer::move(const Board& board, const std::unordered_set<std:
 	return playout_.move(board, player_);
 }
 
-RandomPlayoutPlayer::RandomPlayoutPlayer(vector<double> komi, int player) : komi_(komi), player_(player), playout_(komi) {}
+RandomPlayoutPlayer::RandomPlayoutPlayer(int player, vector<double> komi) : komi_(komi), player_(player), playout_(komi) {}

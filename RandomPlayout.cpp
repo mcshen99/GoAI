@@ -14,31 +14,11 @@ using std::ostream;
 using std::unordered_set;
 using std::hash;
 
-default_random_engine RandomPlayout::gen_;
-uniform_real_distribution<double> RandomPlayout::dist_(0.0, 1.0);
 const int RandomPlayout::dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
 
 RandomPlayout::RandomPlayout(vector<double> komi) : komi_(komi) {}
 
 std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player) {
-	/*if (distribution(generator) < probs["capture"]) {
-		unordered_set<pos> already_suggested;
-		for (pos c : heuristic_set) {
-			if (b.getBoard()[c.first][c.second] != 0) {
-
-			}
-		}
-	}
-
-	if (distribution(generator) < probs["pat3"]) {
-		unordered_set<pos> already_suggested;
-		for (pos c : heuristic_set) {
-			if (b.getBoard()[c.first][c.second] == 0 && already_suggested.find(c) == already_suggested.end()) {
-
-			}
-		}
-	}*/
-
 	map<pos, double> gens;
 
 	array<array<bool, SIZE>, SIZE> grouped = { 0 };
@@ -83,19 +63,12 @@ Move RandomPlayout::move(const Board& board, int player) {
 	//ideal ending state: everything has 2 eyes or seki (neither can kill the other)
 	//so there is no move you can make, so all moves are bad
 	//list of bad moves: suicide (illegal), next move opponent can kill (self-atari)
-	map<pos, double> possibleMoves = gen_playout(board, player);
-	if (possibleMoves.size() == 0) {
-		return Move::pass(player);
-	}
 
-	//update to fit with probabilities
-	
-	double m = dist_(gen_);
-	double sum = 0;
-	for (const auto& it : possibleMoves) {
-		sum += it.second;
-		if (sum >= m) {
-			return Move::move(it.first, player);
+	MoveGenerator moveGenerator(board, player);
+	for (auto p = moveGenerator.next(); !p.first; p = moveGenerator.next()) {
+		Move m = p.second;
+		if (isOkMove(board, m)) {
+			return m;
 		}
 	}
 
