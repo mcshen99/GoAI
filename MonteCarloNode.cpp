@@ -73,19 +73,14 @@ void MonteCarloNode::initNext(const Board& board, int player, const vector<doubl
         }
     }
 
-    set<pos> seen;
-
     CaptureGenerator capture(board, color, moves);
     for (auto p = capture.next(); !p.first; p = capture.next()) {
         Move m = p.second;
         if (RandomPlayout::isOkMove(board, m)) {
-            if (seen.find(m.getCoor()) == seen.end()) {
-                auto it = next_.find(m);
-                if (it != next_.end()) {
-                    it->second->w_ += 15;
-                    it->second->pn_ += 15;
-                }
-                seen.insert(m.getCoor());
+            auto it = next_.find(m);
+            if (it != next_.end()) {
+                it->second->w_ += 15;
+                it->second->pn_ += 15;
             }
         }
     }
@@ -94,16 +89,11 @@ void MonteCarloNode::initNext(const Board& board, int player, const vector<doubl
     for (auto p = pattern.next(); !p.first; p = pattern.next()) {
         Move m = p.second;
         if (RandomPlayout::isOkMove(board, m)) {
-            if (seen.find(m.getCoor()) == seen.end()) {
-                auto it = next_.find(m);
-                if (it != next_.end()) {
-                    it->second->w_ += 10;
-                    it->second->pn_ += 10;
-                }
-
-                seen.insert(m.getCoor());
+            auto it = next_.find(m);
+            if (it != next_.end()) {
+                it->second->w_ += 10;
+                it->second->pn_ += 10;
             }
-
         }
     }
 
@@ -149,7 +139,7 @@ int MonteCarloNode::select(
 
     board.move(element->first);
     history[((player + 1) % 2)].insert(board.getHash());
-    int winner = element->second->select(board, (player + 1) % 2, komi, { last.second, element->first }, history);
+    int winner = element->second->select(board, (player + 1) % 2, komi, {last.second, element->first}, history);
 
     if (winner == p_) {
         w_++;
@@ -184,7 +174,8 @@ std::array<std::array<int, SIZE>, SIZE> MonteCarloNode::cfgDistance(const Board&
             int x = Board::dirs[0][i];
             int y = Board::dirs[1][i];
             pos d = {c.first + x, c.second + y};
-            if (!board.inBounds(d) || (0 <= cfgMap[d.first][d.second] && cfgMap[d.first][d.second] <= cfgMap[c.first][c.second])) {
+            if (!board.inBounds(d) ||
+                (0 <= cfgMap[d.first][d.second] && cfgMap[d.first][d.second] <= cfgMap[c.first][c.second])) {
                 continue;
             }
             int before = cfgMap[d.first][d.second];

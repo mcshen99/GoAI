@@ -204,34 +204,20 @@ std::pair<bool, Move> PatternGenerator::next() {
     while (m_ < moves_.size()) {
         const auto& move = moves_[m_];
         pos p = move.getCoor();
-        p.first += i_;
-        p.second += j_;
 
         if (board_.inBounds(p) && board_.getBoard()[p.first][p.second] == 0) {
             auto pat = board_.getPattern(p);
             if (PATTERNS.find(pat) != PATTERNS.end()) {
-                increment();
+                m_++;
                 return { false, Move::move(p, color_) };
             }
         }
 
-        increment();
+        m_++;
     }
 
     return {true, Move::pass(color_)};
 }
 
-void PatternGenerator::increment() {
-    j_++;
-    if (j_ > 1) {
-        j_ = -1;
-        i_++;
-        if (i_ > 1) {
-            i_ = -1;
-            m_++;
-        }
-    }
-}
-
 PatternGenerator::PatternGenerator(const Board& b, int color, const std::vector<Move>& moves) :
-        board_(b), color_(color), moves_(moves), m_(0), i_(-1), j_(-1) {}
+        board_(b), color_(color), moves_(moves), m_(0) {}

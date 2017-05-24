@@ -18,10 +18,6 @@ private:
     std::vector<Move> moves_;
 
     int m_;
-    int i_;
-    int j_;
-
-    void increment();
 
     typedef std::array<std::string, 3> hood;
     static std::set<std::array<std::array<int, 3>, 3>> genPatterns(const std::vector<hood>& source);

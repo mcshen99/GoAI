@@ -19,9 +19,4 @@ private:
     std::vector<pos> answers_;
 
     int m_;
-    int i_;
-    int j_;
-
-
-    void increment();
 };
