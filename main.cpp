@@ -19,9 +19,8 @@ int main() {
 //
 //	g.run();
 
-
-    auto r1 = std::make_shared<MonteCarloPlayer>(1, komi);
-    auto r2 = std::make_shared<MonteCarloPlayer>(2, komi);
+    auto r1 = std::make_shared<MonteCarloPlayer>(1, komi, 40000);
+    auto r2 = std::make_shared<MonteCarloPlayer>(2, komi, 40000);
 	vector<shared_ptr<Player>> gtpPlayers{ shared_ptr<Player>(r1), shared_ptr<Player>(r2) };
 	//Gtp
 	Gtp gtp(gtpPlayers);

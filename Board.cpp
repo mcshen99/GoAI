@@ -104,6 +104,75 @@ int Board::liberties(pos p) const {
 	return count;
 }
 
+
+vector<pos> Board::fixAtari(pos p, int playerColor) const {
+	queue<pos> q;
+
+	int color = board_[p.first][p.second];
+	vector<pos> answers;
+	if (color == 0) {
+		return answers;
+	}
+
+	q.push(p);
+
+	array<array<bool, SIZE>, SIZE> visited = { false };
+	visited[p.first][p.second] = true;
+	pos lib = p;
+	vector<pos> touching;
+
+	while (!q.empty()) {
+		pos& next = q.front();
+		q.pop();
+
+		int a = next.first;
+		int b = next.second;
+		visited[a][b] = true;
+
+		for (int i = 0; i < 4; ++i) {
+			int x = a + dirs[0][i];
+			int y = b + dirs[1][i];
+			if (!inBounds({ x, y }) || visited[x][y]) {
+				continue;
+			}
+
+			if (board_[x][y] == 0) {
+				visited[x][y] = true;
+				if (lib == p) {
+					lib = {x, y};
+				} else {
+					return answers;
+				}
+			} else if (board_[x][y] == color) {
+				q.push({ x, y });
+			} else if (color == playerColor) {
+				touching.push_back({x, y});
+			}
+		}
+	}
+
+	// default value, no liberties?!
+	if (lib == p) {
+		return answers;
+	}
+
+	answers.push_back(lib);
+	// if opponent, then just capture
+	if (color != playerColor) {
+		return answers;
+	}
+
+	// otherwise, try to counter capture
+	for (auto p : touching) {
+		vector<pos> capture = fixAtari(p, playerColor);
+		if (!capture.empty()) {
+			answers.push_back(capture.back());
+		}
+	}
+
+	return answers;
+}
+
 vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& playerHistory) const {
 	vector<Move> moves;
 	for (int i = 0; i < SIZE; ++i) {

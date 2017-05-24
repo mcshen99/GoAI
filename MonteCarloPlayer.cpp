@@ -44,6 +44,7 @@ Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history
 	if (mod_ > 0) {
 		cout << sims_ / (float(clock() - begin) /  CLOCKS_PER_SEC) << " sims / sec" << endl;
 		comment(cout);
+		cout << "Visits: " << root.visits(m) << endl;
 	}
 
 	return m;

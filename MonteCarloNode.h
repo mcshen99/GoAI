@@ -11,7 +11,7 @@
 
 struct MonteCarloNode {
 private:
-    const int kN = 5; // visit 5 times before expanding
+    const int kN = 2; // visit kN times before expanding
     static std::default_random_engine gen_;
     static std::uniform_int_distribution<int> dist_;
 
@@ -31,6 +31,11 @@ public:
     double winPercentage(Move& m) {
         auto& x = *next_[m];
         return x.w_ * 1.0 / x.n_;
+    }
+
+    double visits(Move& m) {
+        auto& x = *next_[m];
+        return x.n_;
     }
 
     void initNext(const Board& board, int player, const std::vector<double>& komi, std::pair<Move, Move> last,

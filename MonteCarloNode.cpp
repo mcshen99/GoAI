@@ -29,7 +29,8 @@ Move MonteCarloNode::move() {
 void MonteCarloNode::initNext(const Board& board, int player, const vector<double>& komi, std::pair<Move, Move> last,
                               std::map<int, std::unordered_set<size_t>>& history) {
     const auto& playerHistory = history[((player + 1) % 2)];
-    vector<Move> moves = board.getValidMoves(player + 1, playerHistory);
+    int color = player + 1;
+    vector<Move> moves = board.getValidMoves(color, playerHistory);
 
     //for each move, add to next
     auto cfgMap = cfgDistance(board, last.second);
@@ -69,6 +70,40 @@ void MonteCarloNode::initNext(const Board& board, int player, const vector<doubl
                 next_[it]->w_ += 10;
                 next_[it]->pn_ += 10;
             }
+        }
+    }
+
+    set<pos> seen;
+
+    CaptureGenerator capture(board, color, moves);
+    for (auto p = capture.next(); !p.first; p = capture.next()) {
+        Move m = p.second;
+        if (RandomPlayout::isOkMove(board, m)) {
+            if (seen.find(m.getCoor()) == seen.end()) {
+                auto it = next_.find(m);
+                if (it != next_.end()) {
+                    it->second->w_ += 15;
+                    it->second->pn_ += 15;
+                }
+                seen.insert(m.getCoor());
+            }
+        }
+    }
+
+    PatternGenerator pattern(board, color, moves);
+    for (auto p = pattern.next(); !p.first; p = pattern.next()) {
+        Move m = p.second;
+        if (RandomPlayout::isOkMove(board, m)) {
+            if (seen.find(m.getCoor()) == seen.end()) {
+                auto it = next_.find(m);
+                if (it != next_.end()) {
+                    it->second->w_ += 10;
+                    it->second->pn_ += 10;
+                }
+
+                seen.insert(m.getCoor());
+            }
+
         }
     }
 

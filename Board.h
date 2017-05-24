@@ -74,6 +74,8 @@ public:
 
 		return result;
 	}
+
+	std::vector<pos> fixAtari(pos p, int playerColor) const;
 };
 
 std::ostream& operator<<(std::ostream& s, const Board& b);

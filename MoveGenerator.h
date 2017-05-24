@@ -5,11 +5,14 @@
 #include "Board.h"
 #include "RandomPlayout.h"
 #include "PatternGenerator.h"
+#include "CaptureGenerator.h"
 
 class MoveGenerator {
 private:
 	bool usePattern_;
+	bool useCapture_;
 	PatternGenerator pattern_;
+	CaptureGenerator capture_;
 
 	pos current_;
 	int count_;
