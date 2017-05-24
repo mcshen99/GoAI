@@ -104,7 +104,7 @@ int Board::liberties(pos p) const {
 	return count;
 }
 
-vector<Move> Board::getValidMoves(int color, std::unordered_set<size_t>& playerHistory) const {
+vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& playerHistory) const {
 	vector<Move> moves;
 	for (int i = 0; i < SIZE; ++i) {
 		for (int j = 0; j < SIZE; ++j) {
@@ -381,15 +381,30 @@ std::array<std::array<int, 3>, 3> Board::getPattern(pos p) const {
 	array<array<int, 3>, 3> pattern;
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
-			if (!inBounds(p)) {
+			int x = p.first + i;
+			int y = p.second + j;
+			if (!inBounds({x , y})) {
 				pattern[i + 1][j + 1] = -1;
 			} else {
-				pattern[i + 1][j + 1] = board_[p.first + i][p.second + j];
+				pattern[i + 1][j + 1] = board_[x][y];
 			}
 		}
 	}
 
 	return pattern;
+}
+
+bool Board::isEmpty(pos p, int s) const {
+	for (int i = -size; i <= size; i++) {
+		for (int j = -size; j <= size; j++) {
+			int x = p.first + i;
+			int y = p.second + j;
+			if (inBounds({x, y}) && board_[x][y] != 0) {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 ostream& operator<<(ostream& s, const Board& b) {

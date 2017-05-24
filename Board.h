@@ -23,7 +23,7 @@ public:
 
 	int liberties(pos p) const;
 
-	std::vector<Move> getValidMoves(int color, std::unordered_set<size_t>& playerHistory) const;
+	std::vector<Move> getValidMoves(int color, const std::unordered_set<size_t>& playerHistory) const;
 
 	std::vector<pos> getCaptured(pos position, int color) const;
 
@@ -46,6 +46,9 @@ public:
 	size_t getHash() const;
 
 	std::array<std::array<int, 3>, 3> getPattern(pos p) const;
+
+	// check a box around p if its empty
+	bool isEmpty(pos p, int s = 2) const;
 
 	template <class Test>
 	static bool placeAndTest(const Board& board, std::vector<Move> moves, Test test) {
