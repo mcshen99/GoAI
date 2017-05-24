@@ -11,10 +11,12 @@ using std::string;
 using std::getline;
 using std::cin;
 using std::ostream;
+using std::map;
+using std::unordered_set;
 
 CommandLinePlayer::CommandLinePlayer(int color) : color_(color) {}
 
-Move CommandLinePlayer::move(const Board& board) {
+Move CommandLinePlayer::move(const Board& board, const unordered_set<std::pair<int, Board>>& history) {
 	cout << "Please enter your move: " << endl;
 
 	while (true) {

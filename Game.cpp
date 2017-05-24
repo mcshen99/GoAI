@@ -118,7 +118,7 @@ int Game::run() {
 
 		cout << board_ << endl;
 		cout << "Player " << player_ << " is moving..." << endl;
-		Move m = players_[player_]->move(board_);
+		Move m = players_[player_]->move(board_, states_);
 
 		if (m.isPass()) {
 			board_.move(m);

@@ -11,6 +11,8 @@ using std::default_random_engine;
 using std::array;
 using std::queue;
 using std::ostream;
+using std::unordered_set;
+using std::hash;
 
 default_random_engine RandomPlayout::gen_;
 uniform_real_distribution<double> RandomPlayout::dist_(0.0, 1.0);
@@ -100,21 +102,14 @@ Move RandomPlayout::move(const Board& board, int player) {
 	return Move::pass(player);
 }
 
-int RandomPlayout::simulate(Board& board, int player) {
+int RandomPlayout::simulate(Board& board, int player, const map<int, unordered_set<size_t>>& history) {
 	//if 2 players pass, game ends
 	//need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
 	bool lastPass = false;
-	Board twoMovesAgo(board);
-	queue<Move> moves;
 
 	for (int count = 0; count < SIZE*SIZE; ++count) {
 		Move m = move(board, player + 1);
-		moves.push(m);
-		if (moves.size() > 2) {
-			Move oldMove = moves.front();
-			moves.pop();
-			twoMovesAgo.move(oldMove);
-		}
+
 		if (m.isPass()) {
 			if (lastPass) {
 				break;
@@ -123,10 +118,11 @@ int RandomPlayout::simulate(Board& board, int player) {
 			}
 		} else {
 			lastPass = false;
-			board.move(m);
-			if (moves.size() >= 2 && twoMovesAgo.getHash() == board.getHash() && twoMovesAgo == board) {
-				board.move(moves.front());
+			const unordered_set<size_t>& playerHistory = history.at((player + 1) % 2);
+			if (playerHistory.find(board.getHash(m)) != playerHistory.end()) {
 				lastPass = true;
+			} else {
+				board.move(m);
 			}
 		}
 		player = (player + 1) % 2;

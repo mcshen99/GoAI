@@ -7,7 +7,7 @@ ostream& RandomPlayoutPlayer::comment(ostream& s) const {
 	return s;
 }
 
-Move RandomPlayoutPlayer::move(const Board& board) {
+Move RandomPlayoutPlayer::move(const Board& board, const std::unordered_set<std::pair<int, Board>>& history) {
 	return playout_.move(board, player_);
 }
 

@@ -16,6 +16,9 @@ void Gtp::run() {
     while (true) {
         string input;
         getline(cin, input);
+		input.erase(remove_if(input.begin(), input.end(), [](char c) {
+			return c == '\r';
+		}), input.end());
 
         try {
             string output;
@@ -61,14 +64,16 @@ bool Gtp::process(const string& input, string& output) {
         // runtime is unimportant
         const string& cmd = v.at(0);
         string args;
-        if (v.size() >= 1) {
-            for (size_t i = 1; i < v.size(); i++) {
-                args += v[i];
-                args += ' ';
-            }
-            args.pop_back();
+		if (v.size() >= 1) {
+			for (size_t i = 1; i < v.size(); i++) {
+				args += v[i];
+				args += ' ';
+			}
+			if (!args.empty()) {
+				args.pop_back();
+			}
         }
-
+		
         if (cmd == "play") {
             Move m = Move::pass(1);
             parse(args, m);
@@ -253,7 +258,9 @@ string Gtp::response(const set<string>& strings) {
         resp += s;
         resp += "\n";
     }
-    resp.pop_back();
+	if (!resp.empty()) {
+		resp.pop_back();
+	}
     return resp;
 }
 

@@ -46,7 +46,7 @@ void MonteCarloNode::initNext(const Board& board, int player, const vector<doubl
 int MonteCarloNode::select(Board& board, int player, const vector<double>& komi, map<int, unordered_set<size_t>>& history) {
 	if (n_ < kN) {
 		RandomPlayout rp(komi);
-		int winner = rp.simulate(board, player); 
+		int winner = rp.simulate(board, player, history); 
 		if (p_ == winner) {
 			w_++;
 		}

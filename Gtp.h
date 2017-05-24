@@ -8,6 +8,7 @@
 
 #include "Player.h"
 #include "Game.h"
+#include "Board.h"
 
 // TODO merge with Game.cpp
 class GtpGame {
@@ -56,7 +57,7 @@ public:
     }
 
     Move move(int player) {
-        return players_.at(player)->move(board_);
+        return players_.at(player)->move(board_, states_);
     }
 
     bool makeMove(int player, Move m) {

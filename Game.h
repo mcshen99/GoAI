@@ -5,15 +5,7 @@
 #include "Player.h"
 #include <unordered_set>
 #include <utility>
-
-namespace std {
-	template<>
-	struct hash<std::pair<int, Board>> {
-		size_t operator()(const pair<int, Board>& state) const {
-			return state.first + hash<Board>{}(state.second) * 31;
-		}
-	};
-}
+#include "Board.h"
 
 class Game {
 private:

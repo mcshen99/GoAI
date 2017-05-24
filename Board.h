@@ -41,6 +41,8 @@ public:
 
 	bool inBounds(pos position) const;
 
+	size_t getHash(const Move& m) const;
+
 	size_t getHash() const;
 
 	template <class Test>
@@ -75,6 +77,15 @@ namespace std {
 	struct hash<Board> {
 		size_t operator()(const Board &board) const {
 			return board.getHash();
+		}
+	};
+}
+
+namespace std {
+	template<>
+	struct hash<std::pair<int, Board>> {
+		size_t operator()(const pair<int, Board>& state) const {
+			return state.first + hash<Board>{}(state.second) * 31;
 		}
 	};
 }

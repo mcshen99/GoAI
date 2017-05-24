@@ -210,7 +210,6 @@ void Board::move(const Move& m) {
 		return;
 	}
 	if (m.isPass()) {
-		//need to do stuff here
 		return;
 	}
 
@@ -234,6 +233,47 @@ void Board::move(const Move& m) {
 			board_[p.first][p.second] = 0;
 		}
 	}
+}
+
+size_t Board::getHash(const Move& m) const {
+	if (m.isResign()) {
+		return hash_;
+	}
+	if (m.isPass()) {
+		return hash_;
+	}
+
+	size_t hash = hash_;
+
+	int a = m.getCoor().first;
+	int b = m.getCoor().second;
+	board_[a][b] = m.getColor();
+	hash ^= (m.getColor() * TABLE[a][b]);
+
+	vector<std::pair<int, pos>> allCaptures;
+	for (int i = 0; i < 4; ++i) {
+		int x = a + dirs[0][i];
+		int y = b + dirs[1][i];
+		if (!inBounds({ x, y })) {
+			continue;
+		}
+		if (board_[x][y] == m.getColor()) {
+			continue;
+		}
+		auto captured = getCaptured({ x, y }, board_[x][y]);
+		for (pos& p : captured) {
+			hash ^= (board_[p.first][p.second] * TABLE[p.first][p.second]);
+			allCaptures.push_back({ board_[p.first][p.second], p });
+			board_[p.first][p.second] = 0;
+		}
+	}
+
+	board_[a][b] = 0;
+	for (auto& capture : allCaptures) {
+		board_[capture.second.first][capture.second.second] = capture.first;
+	}
+
+	return hash;
 }
 
 bool Board::operator==(const Board& b) const {

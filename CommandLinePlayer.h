@@ -2,6 +2,7 @@
 
 #include "Player.h"
 #include <ostream>
+#include <map>
 
 struct CommandLinePlayer : public Player {
 private:
@@ -12,5 +13,5 @@ public:
 
 	std::ostream& comment(std::ostream& s) const override;
 
-	Move move(const Board& board) override;
+	Move move(const Board& board, const std::unordered_set<std::pair<int, Board>>& history) override;
 };

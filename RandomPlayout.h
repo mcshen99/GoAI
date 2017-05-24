@@ -36,5 +36,5 @@ public:
 
 	Move move(const Board& board, int player);
 
-	int simulate(Board& board, int player);
+	int simulate(Board& board, int player, const std::map<int, std::unordered_set<size_t>>& history);
 };
