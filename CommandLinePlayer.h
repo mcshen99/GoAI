@@ -13,5 +13,5 @@ public:
 
 	std::ostream& comment(std::ostream& s) const override;
 
-	Move move(const Board& board, const std::unordered_set<std::pair<int, Board>>& history) override;
+	Move move(const Board& board, const std::vector<Move>& history) override;
 };

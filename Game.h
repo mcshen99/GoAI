@@ -11,6 +11,7 @@ class Game {
 private:
 	std::vector<std::shared_ptr<Player>> players_;
 	Board board_;
+	std::vector<Move> history_;
 	std::unordered_set<std::pair<int, Board>> states_;
 	int player_;
 	std::vector<bool> resigned_;

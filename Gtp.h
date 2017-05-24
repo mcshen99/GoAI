@@ -16,6 +16,7 @@ private:
     std::vector<std::shared_ptr<Player>> players_;
     Board board_;
     std::unordered_set<std::pair<int, Board>> states_;
+    std::vector<Move> history_;
     std::vector<bool> resigned_;
     int numPasses_;
     int numOut_;
@@ -23,7 +24,7 @@ private:
 
 public:
     GtpGame(const std::vector<std::shared_ptr<Player>>& players, const std::vector<double>& komi) :
-            players_(players), board_(), states_(), resigned_(players.size()), numPasses_(0), numOut_(0),
+            players_(players), board_(), states_(), history_(), resigned_(players.size()), numPasses_(0), numOut_(0),
             komi_(komi) {}
 
     GtpGame(const GtpGame &g) = default;
@@ -57,7 +58,7 @@ public:
     }
 
     Move move(int player) {
-        return players_.at(player)->move(board_, states_);
+        return players_.at(player)->move(board_, history_);
     }
 
     bool makeMove(int player, Move m) {
@@ -66,6 +67,7 @@ public:
         if (m.isPass()) {
             board_.move(m);
             numPasses_++;
+            history_.push_back(m);
             return true;
         }
 
@@ -73,6 +75,7 @@ public:
             numPasses_ = 0;
             resigned_[player] = true;
             numOut_++;
+            history_.push_back(m);
             return true;
         }
 
@@ -82,6 +85,7 @@ public:
             if (states_.find({ nextPlayer(player), next }) == states_.end()) {
                 numPasses_ = 0;
                 board_.move(m);
+                history_.push_back(m);
                 return true;
             }
         }

@@ -153,10 +153,13 @@ PatternGenerator::expandWildcards(const PatternGenerator::hood& p, char c, const
                     h.push_back(p);
                     h.back()[i][j] = e;
                 }
+
+                return h;
             }
         }
     }
 
+    // no wildcards, just return as is
     h.push_back(p);
     return h;
 }
@@ -170,7 +173,11 @@ vector<PatternGenerator::hood> PatternGenerator::expandWildcards(const vector<Pa
         }
     };
 
-    return pat;
+    if (pat.size() == p.size()) {
+        return pat;
+    } else {
+        return expandWildcards(pat, c, exp);
+    }
 }
 
 std::array<std::array<int, 3>, 3> PatternGenerator::convert(const PatternGenerator::hood& h) {

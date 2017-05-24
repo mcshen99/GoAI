@@ -10,7 +10,7 @@ using std::map;
 using std::unordered_set;
 using std::hash;
 
-Move MonteCarloPlayer::move(const Board& board, const std::unordered_set<std::pair<int, Board>>& history) {
+Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history) {
 	MonteCarloNode root;
 	const clock_t begin = clock();
 	for (int i = 0; i < sims_; i++) {
@@ -20,13 +20,22 @@ Move MonteCarloPlayer::move(const Board& board, const std::unordered_set<std::pa
 		Board boardCopy(board);
 
 		map<int, unordered_set<size_t>> historyCopy;
-		historyCopy.insert({ 0, {} });
-		historyCopy.insert({ 1, {} });
-		for (const auto& it : history) {
-			historyCopy[it.first].insert(it.second.getHash());
+		Board b;
+		historyCopy[0].insert(b.getHash());
+		int player = 0;
+		for (const auto& move : history) {
+			b.move(move);
+			historyCopy[(player++) % 2].insert(b.getHash());
 		}
 
-		root.select(boardCopy, player_, komi_, historyCopy);
+		if (history.empty()) {
+			std::pair<Move, Move> blank = { Move::pass(player), Move::pass(((player_ + 1) % 2) + 1) };
+			root.select(boardCopy, player_, komi_, blank, historyCopy);
+		} else if (history.size() == 1) {
+			root.select(boardCopy, player_, komi_, { Move::pass(player), history.back()} , historyCopy);
+		} else {
+			root.select(boardCopy, player_, komi_, { history[history.size() - 2], history.back()}, historyCopy);
+		}
 	}
 
 	Move m = root.move();

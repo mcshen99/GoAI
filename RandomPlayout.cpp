@@ -27,12 +27,20 @@ Move RandomPlayout::move(const Board& board, int color, const std::vector<Move>&
 	return Move::pass(color);
 }
 
-int RandomPlayout::simulate(Board& board, int player, map<int, unordered_set<size_t>> history) {
+int RandomPlayout::simulate(Board& board, int player, std::pair<Move, Move> last, map<int, unordered_set<size_t>>& history) {
 	//if 2 players pass, game ends
 	//need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
 	bool lastPass = false;
 
 	deque<Move> lastMoves;
+    if (!last.first.isPass()) {
+        lastMoves.push_back(last.first);
+    }
+
+    if (!last.second.isPass()) {
+        lastMoves.push_back(last.second);
+    }
+
 	for (int count = 0; count < SIZE * SIZE * 3 / 2; ++count) {
 		Move m = move(board, player + 1, {lastMoves.begin(), lastMoves.end()});
 		if (m.isPass()) {
@@ -43,12 +51,13 @@ int RandomPlayout::simulate(Board& board, int player, map<int, unordered_set<siz
 			}
 		} else {
 			lastPass = false;
-			const unordered_set<size_t>& playerHistory = history.at((player + 1) % 2);
+			unordered_set<size_t>& playerHistory = history[(player + 1) % 2];
 			if (playerHistory.find(board.getHash(m)) != playerHistory.end()) {
 				lastPass = true;
 			} else {
 				board.move(m);
 				lastMoves.push_back(m);
+                playerHistory.insert(board.getHash(m));
 				if (lastMoves.size() > 2) {
 					lastMoves.pop_front();
 				}

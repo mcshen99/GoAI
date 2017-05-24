@@ -15,7 +15,7 @@ private:
 public:
 	MonteCarloPlayer(int color, std::vector<double> komi, int sims = 100, int mod = 0) : player_(color - 1), komi_(komi), sims_(sims), mod_(mod) {}
 
-	Move move(const Board& board, const std::unordered_set<std::pair<int, Board>>& history) override;
+	Move move(const Board& board, const std::vector<Move>& history) override;
 
 	std::ostream& comment(std::ostream& s) const override;
 };

@@ -16,7 +16,7 @@ using std::vector;
 using std::shared_ptr;
 
 Game::Game(vector<shared_ptr<Player>> players, vector<double> komi) :
-	players_(players), board_(), states_(), player_(0), resigned_(players.size()), numPasses_(0), numOut_(0), komi_(komi) {}
+	players_(players), board_(), history_(), states_(), player_(0), resigned_(players.size()), numPasses_(0), numOut_(0), komi_(komi) {}
 
 int Game::run() {
 	while (true) {
@@ -118,10 +118,11 @@ int Game::run() {
 
 		cout << board_ << endl;
 		cout << "Player " << player_ << " is moving..." << endl;
-		Move m = players_[player_]->move(board_, states_);
+		Move m = players_[player_]->move(board_, history_);
 
 		if (m.isPass()) {
 			board_.move(m);
+			history_.push_back(m);
 			cout << "Player " << player_ << " passed" << endl;
 			numPasses_++;
 			player_ = (player_ + 1) % players_.size();
@@ -160,6 +161,7 @@ int Game::run() {
 			if (states_.find({ (player_ + 1) % players_.size(), next }) == states_.end()) {
 				numPasses_ = 0;
 				board_.move(m);
+				history_.push_back(m);
 				player_ = (player_ + 1) % players_.size();
 			} else {
 				cout << "invalid" << endl;

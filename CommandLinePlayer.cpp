@@ -1,9 +1,8 @@
 #include "CommandLinePlayer.h"
 
 #include <iostream>
-#include <string>
 #include <sstream>
-#include <ostream>
+#include <vector>
 
 using std::cout;
 using std::endl;
@@ -16,7 +15,7 @@ using std::unordered_set;
 
 CommandLinePlayer::CommandLinePlayer(int color) : color_(color) {}
 
-Move CommandLinePlayer::move(const Board& board, const unordered_set<std::pair<int, Board>>& history) {
+Move CommandLinePlayer::move(const Board& board, const std::vector<Move>& history) {
 	cout << "Please enter your move: " << endl;
 
 	while (true) {
