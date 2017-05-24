@@ -45,6 +45,8 @@ public:
 
 	size_t getHash() const;
 
+	std::array<std::array<int, 3>, 3> getPattern(pos p) const;
+
 	template <class Test>
 	static bool placeAndTest(const Board& board, std::vector<Move> moves, Test test) {
 		for (auto& m : moves) {

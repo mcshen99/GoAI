@@ -377,6 +377,21 @@ size_t Board::getHash() const {
 	return hash_;
 }
 
+std::array<std::array<int, 3>, 3> Board::getPattern(pos p) const {
+	array<array<int, 3>, 3> pattern;
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			if (!inBounds(p)) {
+				pattern[i + 1][j + 1] = -1;
+			} else {
+				pattern[i + 1][j + 1] = board_[p.first + i][p.second + j];
+			}
+		}
+	}
+
+	return pattern;
+}
+
 ostream& operator<<(ostream& s, const Board& b) {
 	for (auto& i : b.getBoard()) {
 		for (auto j : i) {
