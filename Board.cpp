@@ -118,8 +118,8 @@ vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& p
 			int a = m.getCoor().first;
 			int b = m.getCoor().second;
 			board_[a][b] = m.getColor();
-			
-			vector<pos> allCaptures;
+
+			bool captures = false;
 			for (int i = 0; i < 4; ++i) {
 				int x = a + dirs[0][i];
 				int y = b + dirs[1][i];
@@ -130,15 +130,15 @@ vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& p
 					continue;
 				}
 				auto captured = getCaptured({ x, y }, board_[x][y]);
-				allCaptures.insert(allCaptures.end(), captured.begin(), captured.end());
-			}
-
-			if (!allCaptures.empty()) {
-				Board newBoard(*this);
-				for (pos p : allCaptures) {
-					newBoard.board_[p.first][p.second] = 0;
-					newBoard.hash_ ^= (newBoard.board_[p.first][p.second] * TABLE[p.first][p.second]);
+				if (!captured.empty()) {
+					captures = true;
 				}
+			}
+			board_[a][b] = 0;
+
+			if (captures) {
+				Board newBoard(*this);
+				newBoard.move(m);
 				if (playerHistory.find(newBoard.getHash()) == playerHistory.end()) {
 					moves.push_back(m);
 				}
