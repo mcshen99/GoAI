@@ -395,8 +395,8 @@ std::array<std::array<int, 3>, 3> Board::getPattern(pos p) const {
 }
 
 bool Board::isEmpty(pos p, int s) const {
-	for (int i = -size; i <= size; i++) {
-		for (int j = -size; j <= size; j++) {
+	for (int i = -s; i <= s; i++) {
+		for (int j = -s; j <= s; j++) {
 			int x = p.first + i;
 			int y = p.second + j;
 			if (inBounds({x, y}) && board_[x][y] != 0) {
