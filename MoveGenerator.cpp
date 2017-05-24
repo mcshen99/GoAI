@@ -3,13 +3,24 @@
 
 using std::default_random_engine;
 using std::uniform_int_distribution;
+using std::uniform_real_distribution;
 
 default_random_engine MoveGenerator::gen_;
 uniform_int_distribution<int> MoveGenerator::dist_(0, SIZE - 1);
+uniform_real_distribution<double> MoveGenerator::real_(0.0, 1.0);
 
-MoveGenerator::MoveGenerator(const Board& b, int player) : current_({ dist_(gen_), dist_(gen_) }), count_(0), board_(b), player_(player) { }
+MoveGenerator::MoveGenerator(const Board& b, int color, const std::vector<Move>& moves) :
+		pattern_(b, color, moves), usePattern_(real_(gen_) < 2.0), current_({dist_(gen_), dist_(gen_)}), count_(0),
+		board_(b), color_(color) {}
 
 std::pair<bool, Move> MoveGenerator::next() {
+	if (usePattern_) {
+		auto move = pattern_.next();
+		if (!move.first) {
+			return move;
+		}
+	}
+
 	while (!empty() && board_.getBoard()[current_.first][current_.second] != 0) {
 		current_.first = (current_.first + 1) % SIZE;
 		if (current_.first == 0) {
@@ -19,7 +30,7 @@ std::pair<bool, Move> MoveGenerator::next() {
 		count_++;
 	}
 
-	std::pair<bool, Move> p = { empty(), Move::move(current_, player_) };
+	std::pair<bool, Move> p = { empty(), Move::move(current_, color_) };
 	if (!empty()) {
 		current_.first = (current_.first + 1) % SIZE;
 		if (current_.first == 0) {

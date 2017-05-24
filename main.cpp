@@ -15,7 +15,7 @@ int main() {
 	auto p = std::make_shared<CommandLinePlayer>(1);
 	auto q = std::make_shared<MonteCarloPlayer>(2, komi, 10000, 400);
 	vector<shared_ptr<Player>> players{ shared_ptr<Player>(p), shared_ptr<Player>(q) };
-	Game g(players, komi);	
+	Game g(players, komi);
 
 	g.run();
 

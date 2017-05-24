@@ -1,5 +1,6 @@
 #include "MonteCarloPlayer.h"
 #include <iostream>
+#include <time.h>
 
 using std::ostream;
 using std::cout;
@@ -11,6 +12,7 @@ using std::hash;
 
 Move MonteCarloPlayer::move(const Board& board, const std::unordered_set<std::pair<int, Board>>& history) {
 	MonteCarloNode root;
+	const clock_t begin = clock();
 	for (int i = 0; i < sims_; i++) {
 		if (mod_ > 0 && (i + 1) % mod_ == 0) {
 			cout << (i + 1) / mod_ << "/" << sims_ / mod_ << endl;
@@ -29,6 +31,11 @@ Move MonteCarloPlayer::move(const Board& board, const std::unordered_set<std::pa
 
 	Move m = root.move();
 	winP_ = root.winPercentage(m);
+
+	if (mod_ > 0) {
+		cout << sims_ / (float(clock() - begin) /  CLOCKS_PER_SEC) << " sims / sec" << endl;
+		comment(cout);
+	}
 
 	return m;
 }

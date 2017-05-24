@@ -1,70 +1,22 @@
 #include "RandomPlayout.h"
-#include <random>
-#include <queue>
+#include "Gtp.h"
+#include <deque>
 #include <iostream>
 
-using std::uniform_real_distribution;
-using std::vector;
-using std::map;
-using std::string;
-using std::default_random_engine;
-using std::array;
-using std::queue;
-using std::ostream;
-using std::unordered_set;
-using std::hash;
+using namespace std;
 
 const int RandomPlayout::dirs[2][4] = { { 1, -1, 0, 0 },{ 0, 0, 1, -1 } };
 
 RandomPlayout::RandomPlayout(vector<double> komi) : komi_(komi) {}
 
-std::map<pos, double> RandomPlayout::gen_playout(const Board& board, int player) {
-	map<pos, double> gens;
-
-	array<array<bool, SIZE>, SIZE> grouped = { 0 };
-
-	std::array<std::array<int, SIZE>, SIZE> brd = board.getBoard();
-
-	//put all the positions into their groups, actually maybe count liberties here -> if neighbor = 0, then add it to the list if it hasn't already been visited
-	for (int i = 0; i < SIZE; ++i) {
-		for (int j = 0; j < SIZE; ++j) {
-			if (brd[i][j] == 0) {
-				gens[{i, j}] = 1;
-			}
-		}
-	}
-
-	for (int i = 0; i < SIZE; ++i) {
-		for (int j = 0; j < SIZE; ++j) {
-			if (gens.find({ i, j }) == gens.end()) {
-				continue;
-			}
-			Move m = Move::move({ i, j }, player);
-			if (!isOkMove(board, m)) {
-				gens.erase({ i, j });
-			}
-		}
-	}
-
-	if (gens.size() != 0) {
-		double prob = 1.0 / (gens.size());
-
-		for (const auto& it : gens) {
-			gens[it.first] = prob;
-		}
-	}
-
-	return gens;
-}
-
 //implement gen_playout (filter bad moves), then in move pick a random move (if none, then pass)
-Move RandomPlayout::move(const Board& board, int player) {
+Move RandomPlayout::move(const Board& board, int color, const std::vector<Move>& lastMoves) {
 	//to end the game, need to check for moves that you would not make in end state
 	//ideal ending state: everything has 2 eyes or seki (neither can kill the other)
 	//so there is no move you can make, so all moves are bad
 	//list of bad moves: suicide (illegal), next move opponent can kill (self-atari)
 
-	MoveGenerator moveGenerator(board, player);
+	MoveGenerator moveGenerator(board, color, lastMoves);
 	for (auto p = moveGenerator.next(); !p.first; p = moveGenerator.next()) {
 		Move m = p.second;
 		if (isOkMove(board, m)) {
@@ -72,17 +24,17 @@ Move RandomPlayout::move(const Board& board, int player) {
 		}
 	}
 
-	return Move::pass(player);
+	return Move::pass(color);
 }
 
-int RandomPlayout::simulate(Board& board, int player, const map<int, unordered_set<size_t>>& history) {
+int RandomPlayout::simulate(Board& board, int player, map<int, unordered_set<size_t>> history) {
 	//if 2 players pass, game ends
 	//need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
 	bool lastPass = false;
 
-	for (int count = 0; count < SIZE*SIZE; ++count) {
-		Move m = move(board, player + 1);
-
+	deque<Move> lastMoves;
+	for (int count = 0; count < SIZE * SIZE * 3 / 2; ++count) {
+		Move m = move(board, player + 1, {lastMoves.begin(), lastMoves.end()});
 		if (m.isPass()) {
 			if (lastPass) {
 				break;
@@ -96,6 +48,10 @@ int RandomPlayout::simulate(Board& board, int player, const map<int, unordered_s
 				lastPass = true;
 			} else {
 				board.move(m);
+				lastMoves.push_back(m);
+				if (lastMoves.size() > 2) {
+					lastMoves.pop_front();
+				}
 			}
 		}
 		player = (player + 1) % 2;

@@ -24,14 +24,12 @@ private:
 
 	static bool isEyeFilling(const Board& board, const Move& m);
 
-	std::map<pos, double> gen_playout(const Board& board, int player);
-
 public:
 	RandomPlayout(std::vector<double> komi);
 
-	Move move(const Board& board, int player);
+	Move move(const Board& board, int player, const std::vector<Move>& lastMoves);
 
-	int simulate(Board& board, int player, const std::map<int, std::unordered_set<size_t>>& history);
+	int simulate(Board& board, int player, std::map<int, std::unordered_set<size_t>> history);
 
 	static bool isOkMove(const Board& board, const Move& m);
 };
