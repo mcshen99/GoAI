@@ -13,7 +13,7 @@ private:
 	double winP_;
 
 public:
-	MonteCarloPlayer(int color, std::vector<double> komi, int sims = 100, int mod = 0) : player_(color - 1), komi_(komi), sims_(sims), mod_(mod) {}
+	MonteCarloPlayer(int color, std::vector<double> komi, int sims = 10000, int mod = 0) : player_(color - 1), komi_(komi), sims_(sims), mod_(mod) {}
 
 	Move move(const Board& board, const std::vector<Move>& history) override;
 

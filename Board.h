@@ -10,7 +10,6 @@ const int SIZE = 9;
 
 struct Board {
 private:
-	const static int dirs[2][4];
 	const static std::array<std::array<size_t, SIZE>, SIZE> TABLE;
 
 	mutable std::array<std::array<int, SIZE>, SIZE> board_;
@@ -19,6 +18,8 @@ private:
 	static std::array<std::array<size_t, SIZE>, SIZE> getTable();
 
 public:
+	const static int dirs[2][4];
+
 	bool isSuicide(const Move& move) const;
 
 	int liberties(pos p) const;

@@ -143,7 +143,7 @@ vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& p
 					moves.push_back(m);
 				}
 			} else {
-				if (playerHistory.find(this->getHash()) == playerHistory.end()) {
+				if (playerHistory.find(this->getHash() ^ (color * TABLE[a][b])) == playerHistory.end()) {
 					moves.push_back(m);
 				}
 			}
