@@ -16,13 +16,13 @@ Move RandomPlayout::move(const Board& board, int color, const std::vector<Move>&
 	//so there is no move you can make, so all moves are bad
 	//list of bad moves: suicide (illegal), next move opponent can kill (self-atari)
 
-    vector<Move> heuristicMoves;
+    vector<pos> heuristicMoves;
     for (auto& m : lastMoves) {
         int x = m.getCoor().first;
         int y = m.getCoor().second;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                heuristicMoves.push_back(Move::move({x + i, y + j}, m.getColor()));
+                heuristicMoves.emplace_back(x + i, y + j);
             }
         }
     }

@@ -10,12 +10,12 @@
 class PatternGenerator {
 public:
     std::pair<bool, Move> next();
-    PatternGenerator(const Board& b, int color, const std::vector<Move>& moves);
+    PatternGenerator(const Board& b, int color, const std::vector<pos>& moves);
 
 private:
     const Board& board_;
     int color_;
-    std::vector<Move> moves_;
+    std::vector<pos> moves_;
 
     int m_;
 

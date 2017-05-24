@@ -25,7 +25,7 @@ private:
 	static std::uniform_real_distribution<double> real_;
 
 public:
-	MoveGenerator(const Board& b, int color, const std::vector<Move>& moves);
+	MoveGenerator(const Board& b, int color, const std::vector<pos>& moves);
 
 	std::pair<bool, Move> next();
 	

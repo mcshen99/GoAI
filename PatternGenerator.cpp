@@ -202,8 +202,7 @@ std::array<std::array<int, 3>, 3> PatternGenerator::convert(const PatternGenerat
 
 std::pair<bool, Move> PatternGenerator::next() {
     while (m_ < moves_.size()) {
-        const auto& move = moves_[m_];
-        pos p = move.getCoor();
+        pos p = moves_[m_];
 
         if (board_.inBounds(p) && board_.getBoard()[p.first][p.second] == 0) {
             auto pat = board_.getPattern(p);
@@ -219,5 +218,5 @@ std::pair<bool, Move> PatternGenerator::next() {
     return {true, Move::pass(color_)};
 }
 
-PatternGenerator::PatternGenerator(const Board& b, int color, const std::vector<Move>& moves) :
+PatternGenerator::PatternGenerator(const Board& b, int color, const std::vector<pos>& moves) :
         board_(b), color_(color), moves_(moves), m_(0) {}

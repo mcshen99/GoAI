@@ -72,8 +72,14 @@ void MonteCarloNode::initNext(const Board& board, int player, const vector<doubl
             }
         }
     }
+    vector<pos> all;
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            all.emplace_back(i, j);
+        }
+    }
 
-    CaptureGenerator capture(board, color, moves);
+    CaptureGenerator capture(board, color, all);
     for (auto p = capture.next(); !p.first; p = capture.next()) {
         Move m = p.second;
         if (RandomPlayout::isOkMove(board, m)) {
@@ -85,7 +91,7 @@ void MonteCarloNode::initNext(const Board& board, int player, const vector<doubl
         }
     }
 
-    PatternGenerator pattern(board, color, moves);
+    PatternGenerator pattern(board, color, all);
     for (auto p = pattern.next(); !p.first; p = pattern.next()) {
         Move m = p.second;
         if (RandomPlayout::isOkMove(board, m)) {

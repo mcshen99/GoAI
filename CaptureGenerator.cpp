@@ -4,7 +4,7 @@
 
 #include "CaptureGenerator.h"
 
-CaptureGenerator::CaptureGenerator(const Board& b, int color, const std::vector<Move>& moves) :
+CaptureGenerator::CaptureGenerator(const Board& b, int color, const std::vector<pos>& moves) :
         board_(b), color_(color), moves_(moves), m_(0) {}
 
 std::pair<bool, Move> CaptureGenerator::next() {
@@ -15,8 +15,7 @@ std::pair<bool, Move> CaptureGenerator::next() {
             return { false, m };
         }
 
-        const auto& move = moves_[m_];
-        pos p = move.getCoor();
+        pos p = moves_[m_];
 
         if (board_.inBounds(p)) {
             auto answers = board_.fixAtari(p, color_);

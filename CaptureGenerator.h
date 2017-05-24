@@ -9,13 +9,13 @@
 
 class CaptureGenerator {
 public:
-    CaptureGenerator(const Board& b, int color, const std::vector<Move>& moves);
+    CaptureGenerator(const Board& b, int color, const std::vector<pos>& moves);
     std::pair<bool, Move> next();
 
 private:
     const Board& board_;
     int color_;
-    std::vector<Move> moves_;
+    std::vector<pos> moves_;
     std::vector<pos> answers_;
 
     int m_;
