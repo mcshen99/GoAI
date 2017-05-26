@@ -5,13 +5,13 @@
 #include <map>
 
 struct CommandLinePlayer : public Player {
-private:
-	int color_;
+ private:
+  int color_;
 
-public:
-	CommandLinePlayer(int color);
+ public:
+  CommandLinePlayer(int color);
 
-	std::ostream& comment(std::ostream& s) const override;
+  std::ostream &comment(std::ostream &s) const override;
 
-	Move move(const Board& board, const std::vector<Move>& history) override;
+  Move move(const Board &board, const std::vector<Move> &history) override;
 };
