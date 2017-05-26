@@ -9,9 +9,14 @@ uniform_int_distribution<int> MoveGenerator::dist_(0, SIZE - 1);
 uniform_real_distribution<double> MoveGenerator::real_(0.0, 1.0);
 
 MoveGenerator::MoveGenerator(const Board& b, int color, const std::vector<pos>& moves) :
-    usePattern_(real_(gen_) < 0.95), useCapture_(real_(gen_) < 0.95), pattern_(b, color, moves),
-    capture_(b, color, moves), current_({dist_(gen_), dist_(gen_)}), count_(0),
-    board_(b), color_(color) {}
+    usePattern_(real_(gen_) < 0.95),
+    useCapture_(real_(gen_) < 0.95),
+    pattern_(b, color, moves),
+    capture_(b, color, moves),
+    current_({dist_(gen_), dist_(gen_)}),
+    count_(0),
+    board_(b),
+    color_(color) {}
 
 std::pair<bool, Move> MoveGenerator::next() {
   if (useCapture_) {
