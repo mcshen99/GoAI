@@ -184,16 +184,16 @@ vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& p
 
       int a = m.getCoor().first;
       int b = m.getCoor().second;
-      board_[a][b] = m.getColor();
+      board_[a][b] = color;
 
       bool captures = false;
-      for (int i = 0; i < 4; ++i) {
-        int x = a + dirs[0][i];
-        int y = b + dirs[1][i];
+      for (int d = 0; d < 4; ++d) {
+        int x = a + dirs[0][d];
+        int y = b + dirs[1][d];
         if (!inBounds({x, y})) {
           continue;
         }
-        if (board_[x][y] == m.getColor()) {
+        if (board_[x][y] == color) {
           continue;
         }
         auto captured = getCaptured({x, y}, board_[x][y]);

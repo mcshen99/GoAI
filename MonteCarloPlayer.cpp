@@ -16,12 +16,12 @@ Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history
 
     map<int, unordered_set<size_t>> historyCopy;
     Board b;
-    historyCopy[0].insert(b.getHash());
     int player = 0;
-    for (const auto& move : history) {
-      b.move(move);
+    for (const auto& m : history) {
       historyCopy[(player++) % 2].insert(b.getHash());
+      b.move(m);
     }
+    historyCopy[(player++) % 2].insert(b.getHash());
 
     if (history.empty()) {
       std::pair<Move, Move> blank = {Move::pass(player), Move::pass(((player_ + 1) % 2) + 1)};

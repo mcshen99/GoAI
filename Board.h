@@ -12,8 +12,8 @@ struct Board {
  private:
   const static std::array<std::array<size_t, SIZE>, SIZE> TABLE;
 
-  mutable std::array<std::array<int, SIZE>, SIZE> board_;
-  size_t hash_;
+  mutable std::array<std::array<int, SIZE>, SIZE> board_ = {};
+  size_t hash_ = 0;
 
   static std::array<std::array<size_t, SIZE>, SIZE> getTable();
 

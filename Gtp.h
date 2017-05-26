@@ -61,7 +61,7 @@ class GtpGame {
   }
 
   int nextPlayer(int player) {
-    for (int i = player + 1; i != player; i = (i + 1) % players_.size()) {
+    for (int i = (player + 1) % 2; i != player; i = (i + 1) % players_.size()) {
       if (!resigned_[i]) {
         return i;
       }
@@ -222,23 +222,23 @@ class Gtp {
     };
   }
 
-  std::string response();
+  static std::string response();
 
-  std::string response(const std::set<std::string>& strings);
+  static std::string response(const std::set<std::string>& strings);
 
-  std::string response(bool b);
+  static std::string response(bool b);
 
-  std::string response(int i);
+  static std::string response(int i);
 
-  std::string response(const std::string& s);
+  static std::string response(const std::string& s);
 
-  std::string response(const color& c);
+  static std::string response(const color& c);
 
-  std::string response(const Move& m);
+  static std::string response(const Move& m);
 
-  std::string wrap(const std::string& id, const std::string& resp);
+  static std::string wrap(const std::string& id, const std::string& resp);
 
-  std::string response(const vertex& v);
+  static std::string response(const vertex& v);
 
-  std::string response(const pspairs& p);
+  static std::string response(const pspairs& p);
 };
