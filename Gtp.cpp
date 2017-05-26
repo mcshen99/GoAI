@@ -109,6 +109,14 @@ bool Gtp::process(const string& input, string& output) {
       parse(args, f);
       komi(f);
       output = wrap(id, response());
+    } else if (cmd == "gogui-analyze_commands") {
+      output = wrap(id, response(gogui_analyze_commands()));
+    } else if (cmd == "move_probabilities") {
+      output = wrap(id, response(move_probabilities()));
+    } else if (cmd == "move_visits") {
+      output = wrap(id, response(move_visits()));
+    } else if (cmd == "move_prior_visits") {
+      output = wrap(id, response(move_prior_visits()));
     } else {
       throw GtpException("unknown command");
     }
@@ -236,6 +244,18 @@ string Gtp::showboard() {
   return s;
 }
 
+Gtp::pspairs Gtp::move_probabilities() {
+  return game_.getPlayers().at(game_.getLastPlayer())->moveProbabilities();
+}
+
+Gtp::pspairs Gtp::move_visits() {
+  return game_.getPlayers().at(game_.getLastPlayer())->moveVisits();
+}
+
+Gtp::pspairs Gtp::move_prior_visits() {
+  return game_.getPlayers().at(game_.getLastPlayer())->movePriors();
+}
+
 string Gtp::response() {
   return "";
 }
@@ -299,4 +319,11 @@ std::string Gtp::response(const Move& m) {
   }
 }
 
-
+string Gtp::response(const Gtp::pspairs& p) {
+  string resp;
+  for (auto& line : p) {
+    resp += response(line.first) + " " + line.second + "\n";
+  }
+  resp.pop_back();
+  return resp;
+}

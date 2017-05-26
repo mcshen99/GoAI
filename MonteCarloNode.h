@@ -27,15 +27,21 @@ struct MonteCarloNode {
 
   Move move();
 
-  double winPercentage(Move& m) {
-    auto& x = *next_[m];
-    return x.w_ * 1.0 / x.n_;
+  double winPercentage() {
+    return w_ * 1.0 / n_;
   }
 
-  double visits(Move& m) {
-    auto& x = *next_[m];
-    return x.n_;
+  int visits() {
+    return n_;
   }
+
+  int priorVisits() {
+    return pn_;
+  }
+
+  const std::unordered_map<Move, std::shared_ptr<MonteCarloNode>>& getNext() {
+    return next_;
+  };
 
   void initNext(
       const Board& board,

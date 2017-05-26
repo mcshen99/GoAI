@@ -34,8 +34,8 @@ int main(int argc, char* argv[]) {
     Game g(players, komi);
     g.run();
   } else if (mode == "gtp") {
-    auto r1 = std::make_shared<MonteCarloPlayer>(1, komi, 100);
-    auto r2 = std::make_shared<MonteCarloPlayer>(2, komi, 100);
+    auto r1 = std::make_shared<MonteCarloPlayer>(1, komi, 1000);
+    auto r2 = std::make_shared<MonteCarloPlayer>(2, komi, 1000);
     vector<shared_ptr<Player>> gtpPlayers{shared_ptr<Player>(r1), shared_ptr<Player>(r2)};
     Gtp gtp(gtpPlayers, debug);
     gtp.run();

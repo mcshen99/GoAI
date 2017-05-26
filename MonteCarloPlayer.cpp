@@ -1,13 +1,7 @@
 #include "MonteCarloPlayer.h"
 #include <iostream>
 
-using std::ostream;
-using std::cout;
-using std::endl;
-using std::vector;
-using std::map;
-using std::unordered_set;
-using std::hash;
+using namespace std;
 
 Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history) {
   log.str(std::string());
@@ -40,15 +34,37 @@ Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history
   }
 
   Move m = root.move();
-  winP_ = root.winPercentage(m);
+  winP_ = root.getNext().at(m)->winPercentage();
 
   log << sims_ / (float(clock() - begin) / CLOCKS_PER_SEC) << " sims / sec" << endl;
   log << "Winning probability: " << winP_ << endl;
-  log << "Visits: " << root.visits(m) << endl;
+  log << "Visits: " << root.getNext().at(m)->priorVisits() << endl;
+
+  probs.clear();
+  visits.clear();
+  priors.clear();
+  const auto& next = root.getNext();
+  for (const auto& entry : next) {
+    probs.emplace_back(entry.first, std::to_string(entry.second->winPercentage()));
+    visits.emplace_back(entry.first, std::to_string(entry.second->visits()));
+    priors.emplace_back(entry.first, std::to_string(entry.second->priorVisits()));
+  }
 
   return m;
 }
 
 ostream& MonteCarloPlayer::comment(ostream& s) const {
   return s << log.str() << std::flush;
+}
+
+std::vector<std::pair<Move, std::string>> MonteCarloPlayer::moveProbabilities() const {
+  return probs;
+}
+
+std::vector<std::pair<Move, std::string>> MonteCarloPlayer::moveVisits() const {
+  return visits;
+}
+
+std::vector<std::pair<Move, std::string>> MonteCarloPlayer::movePriors() const {
+  return priors;
 }

@@ -70,6 +70,14 @@ class GtpGame {
     return player;
   }
 
+  int getLastPlayer() {
+    if (!history_.empty()) {
+      return history_.back().getColor() - 1;
+    }
+
+    return 0;
+  }
+
   Move move(int player) {
     Move m = players_.at(player)->move(board_, history_);
     if (debug_) {
@@ -141,6 +149,7 @@ class Gtp {
   };
 
   typedef pos vertex;
+  typedef std::vector<std::pair<Move, std::string>> pspairs;
 
   const static vertex pass;
 
@@ -178,6 +187,12 @@ class Gtp {
 
   std::string showboard();
 
+  pspairs move_probabilities();
+
+  pspairs move_visits();
+
+  pspairs move_prior_visits();
+
   std::set<std::string> list_commands() const {
     return {
         "protocol_version",
@@ -192,8 +207,20 @@ class Gtp {
         "play",
         "genmove",
         "showboard",
+        "gogui-analyze_commands",
+        "move_probabilities",
+        "move_visits",
+        "move_prior_visits"
     };
   };
+
+  std::set<std::string> gogui_analyze_commands() const {
+    return {
+        "pspairs/Move Probabilities/move_probabilities",
+        "pspairs/Move Visits/move_visits",
+        "pspairs/Move Prior Visits/move_prior_visits",
+    };
+  }
 
   std::string response();
 
@@ -212,4 +239,6 @@ class Gtp {
   std::string wrap(const std::string& id, const std::string& resp);
 
   std::string response(const vertex& v);
+
+  std::string response(const pspairs& p);
 };
