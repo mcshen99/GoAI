@@ -26,8 +26,15 @@ class GtpGame {
 
  public:
   GtpGame(const std::vector<std::shared_ptr<Player>>& players, const std::vector<double>& komi, bool debug) :
-      players_(players), board_(), states_(), history_(), resigned_(players.size()), numPasses_(0), numOut_(0),
-      komi_(komi), debug_(debug) {}
+      players_(players),
+      board_(),
+      states_(),
+      history_(),
+      resigned_(players.size()),
+      numPasses_(0),
+      numOut_(0),
+      komi_(komi),
+      debug_(debug) {}
 
   GtpGame(const GtpGame& g) = default;
   GtpGame& operator=(const GtpGame& g) = default;

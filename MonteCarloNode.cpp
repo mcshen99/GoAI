@@ -25,7 +25,10 @@ Move MonteCarloNode::move() {
 }
 
 void MonteCarloNode::initNext(
-    const Board& board, int player, const vector<double>& komi, std::pair<Move, Move> last,
+    const Board& board,
+    int player,
+    const vector<double>& komi,
+    std::pair<Move, Move> last,
     std::map<int, std::unordered_set<size_t>>& history) {
   const auto& playerHistory = history[((player + 1) % 2)];
   int color = player + 1;
