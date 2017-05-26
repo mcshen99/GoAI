@@ -36,10 +36,11 @@ Move RandomPlayout::move(const Board& board, int color, const std::vector<Move>&
   return Move::pass(color);
 }
 
-int RandomPlayout::simulate(Board& board,
-                            int player,
-                            std::pair<Move, Move> last,
-                            map<int, unordered_set<size_t>>& history) {
+int RandomPlayout::simulate(
+    Board& board,
+    int player,
+    std::pair<Move, Move> last,
+    map<int, unordered_set<size_t>>& history) {
   //if 2 players pass, game ends
   //need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
   bool lastPass = false;
@@ -123,34 +124,36 @@ bool RandomPlayout::isGroup(const Board& board, const Move& m) {
 }
 
 bool RandomPlayout::isAtari(const Board& board, const Move& m) {
-  return Board::placeAndTest(board, {m}, [&m](const Board& b) {
-    return b.liberties(m.getCoor()) == 1;
-  });
+  return Board::placeAndTest(
+      board, {m}, [&m](const Board& b) {
+        return b.liberties(m.getCoor()) == 1;
+      });
 }
 
 bool RandomPlayout::isCapture(const Board& board, const Move& m) {
-  return Board::placeAndTest(board, {m}, [&m](const Board& b) {
-    const int dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
+  return Board::placeAndTest(
+      board, {m}, [&m](const Board& b) {
+        const int dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
 
-    int c = m.getCoor().first;
-    int d = m.getCoor().second;
-    for (int i = 0; i < 4; ++i) {
-      int x = c + dirs[0][i];
-      int y = d + dirs[1][i];
-      if (!b.inBounds({x, y})) {
-        continue;
-      }
-      if (b.getBoard()[x][y] == m.getColor()) {
-        continue;
-      }
-      auto captured = b.getCaptured({x, y}, b.getBoard()[x][y]);
-      if (!captured.empty()) {
-        return true;
-      }
-    }
+        int c = m.getCoor().first;
+        int d = m.getCoor().second;
+        for (int i = 0; i < 4; ++i) {
+          int x = c + dirs[0][i];
+          int y = d + dirs[1][i];
+          if (!b.inBounds({x, y})) {
+            continue;
+          }
+          if (b.getBoard()[x][y] == m.getColor()) {
+            continue;
+          }
+          auto captured = b.getCaptured({x, y}, b.getBoard()[x][y]);
+          if (!captured.empty()) {
+            return true;
+          }
+        }
 
-    return false;
-  });
+        return false;
+      });
 }
 
 bool RandomPlayout::isEyeFilling(const Board& board, const Move& m) {

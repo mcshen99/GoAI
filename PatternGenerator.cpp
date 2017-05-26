@@ -164,9 +164,10 @@ PatternGenerator::expandWildcards(const PatternGenerator::hood& p, char c, const
   return h;
 }
 
-vector<PatternGenerator::hood> PatternGenerator::expandWildcards(const vector<PatternGenerator::hood>& p,
-                                                                 char c,
-                                                                 const vector<char>& exp) {
+vector<PatternGenerator::hood> PatternGenerator::expandWildcards(
+    const vector<PatternGenerator::hood>& p,
+    char c,
+    const vector<char>& exp) {
   vector<PatternGenerator::hood> pat;
   for (const auto& h : p) {
     auto v = expandWildcards(h, c, exp);

@@ -16,15 +16,17 @@ double MonteCarloNode::uct(int t) {
 }
 
 Move MonteCarloNode::move() {
-  auto element = std::max_element(next_.begin(), next_.end(), [](const auto& a, const auto& b) {
-    return a.second->n_ - a.second->pn_ < b.second->n_ - b.second->pn_;
-  });
+  auto element = std::max_element(
+      next_.begin(), next_.end(), [](const auto& a, const auto& b) {
+        return a.second->n_ - a.second->pn_ < b.second->n_ - b.second->pn_;
+      });
 
   return element->first;
 }
 
-void MonteCarloNode::initNext(const Board& board, int player, const vector<double>& komi, std::pair<Move, Move> last,
-                              std::map<int, std::unordered_set<size_t>>& history) {
+void MonteCarloNode::initNext(
+    const Board& board, int player, const vector<double>& komi, std::pair<Move, Move> last,
+    std::map<int, std::unordered_set<size_t>>& history) {
   const auto& playerHistory = history[((player + 1) % 2)];
   int color = player + 1;
   vector<Move> moves = board.getValidMoves(color, playerHistory);
@@ -136,9 +138,10 @@ int MonteCarloNode::select(
     return winner;
   }
 
-  auto element = max_element(next_.begin(), next_.end(), [this](const auto& a, const auto& b) {
-    return a.second->uct(n_) < b.second->uct(n_);
-  });
+  auto element = max_element(
+      next_.begin(), next_.end(), [this](const auto& a, const auto& b) {
+        return a.second->uct(n_) < b.second->uct(n_);
+      });
 
   board.move(element->first);
   history[((player + 1) % 2)].insert(board.getHash());

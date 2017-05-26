@@ -37,11 +37,13 @@ struct MonteCarloNode {
     return x.n_;
   }
 
-  void initNext(const Board& board, int player, const std::vector<double>& komi, std::pair<Move, Move> last,
-                std::map<int, std::unordered_set<size_t>>& history);
+  void initNext(
+      const Board& board, int player, const std::vector<double>& komi, std::pair<Move, Move> last,
+      std::map<int, std::unordered_set<size_t>>& history);
 
-  int select(Board& board, int player, const std::vector<double>& komi, std::pair<Move, Move> last,
-             std::map<int, std::unordered_set<size_t>>& history);
+  int select(
+      Board& board, int player, const std::vector<double>& komi, std::pair<Move, Move> last,
+      std::map<int, std::unordered_set<size_t>>& history);
 
   static std::array<std::array<int, SIZE>, SIZE> cfgDistance(const Board& board, const Move& m);
 };

@@ -7,16 +7,19 @@ using namespace std;
 
 const Gtp::vertex Gtp::pass = {-1, -1};
 
-Gtp::Gtp(std::vector<std::shared_ptr<Player>>& players, bool debug) : game_(players, vector<double>(players.size()),
-                                                                            debug) {}
+Gtp::Gtp(std::vector<std::shared_ptr<Player>>& players, bool debug) : game_(
+    players, vector<double>(players.size()),
+    debug) {}
 
 void Gtp::run() {
   while (true) {
     string input;
     getline(cin, input);
-    input.erase(remove_if(input.begin(), input.end(), [](char c) {
-      return c == '\r';
-    }), input.end());
+    input.erase(
+        remove_if(
+            input.begin(), input.end(), [](char c) {
+              return c == '\r';
+            }), input.end());
 
     try {
       string output;

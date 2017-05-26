@@ -24,8 +24,9 @@ class RandomPlayout {
 
   Move move(const Board& board, int player, const std::vector<Move>& lastMoves);
 
-  int simulate(Board& board, int player, std::pair<Move, Move> lastMove,
-               std::map<int, std::unordered_set<size_t>>& history);
+  int simulate(
+      Board& board, int player, std::pair<Move, Move> lastMove,
+      std::map<int, std::unordered_set<size_t>>& history);
 
   static bool isOkMove(const Board& board, const Move& m);
 
