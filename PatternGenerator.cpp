@@ -88,7 +88,7 @@ const vector<PatternGenerator::hood> PatternGenerator::PATTERNS_SOURCE = {
 const set<array<array<int, 3>, 3>> PatternGenerator::PATTERNS = genPatterns(PATTERNS_SOURCE);
 
 set<array<array<int, 3>, 3>>
-PatternGenerator::genPatterns(const vector<PatternGenerator::hood> &source) {
+PatternGenerator::genPatterns(const vector<PatternGenerator::hood>& source) {
   vector<PatternGenerator::hood> pats = source;
   pats = expandWildcards(pats, '?', {'.', 'X', 'O', ' '});
   pats = expandWildcards(pats, 'x', {'.', 'O', ' '});
@@ -99,13 +99,13 @@ PatternGenerator::genPatterns(const vector<PatternGenerator::hood> &source) {
   pats = apply(pats, swapColors);
 
   set<array<array<int, 3>, 3>> patterns;
-  for (const auto &h : pats) {
+  for (const auto& h : pats) {
     patterns.insert(convert(h));
   }
   return patterns;
 }
 
-PatternGenerator::hood PatternGenerator::rotate90(const PatternGenerator::hood &p) {
+PatternGenerator::hood PatternGenerator::rotate90(const PatternGenerator::hood& p) {
   return {
       string() + p[2][0] + p[1][0] + p[0][0],
       string() + p[2][1] + p[1][1] + p[0][1],
@@ -113,11 +113,11 @@ PatternGenerator::hood PatternGenerator::rotate90(const PatternGenerator::hood &
   };
 }
 
-PatternGenerator::hood PatternGenerator::flipVertical(const PatternGenerator::hood &p) {
+PatternGenerator::hood PatternGenerator::flipVertical(const PatternGenerator::hood& p) {
   return {p[2], p[1], p[0]};
 }
 
-PatternGenerator::hood PatternGenerator::flipHorizontal(const PatternGenerator::hood &p) {
+PatternGenerator::hood PatternGenerator::flipHorizontal(const PatternGenerator::hood& p) {
   return {
       string() + p[0][2] + p[0][1] + p[0][0],
       string() + p[1][2] + p[1][1] + p[1][0],
@@ -125,10 +125,10 @@ PatternGenerator::hood PatternGenerator::flipHorizontal(const PatternGenerator::
   };
 }
 
-PatternGenerator::hood PatternGenerator::swapColors(const PatternGenerator::hood &p) {
+PatternGenerator::hood PatternGenerator::swapColors(const PatternGenerator::hood& p) {
   PatternGenerator::hood h;
   int count = 0;
-  for (const string &s : p) {
+  for (const string& s : p) {
     string t = s;
     replace(t.begin(), t.end(), 'X', 'Z');
     replace(t.begin(), t.end(), 'O', 'X');
@@ -144,7 +144,7 @@ PatternGenerator::hood PatternGenerator::swapColors(const PatternGenerator::hood
 }
 
 vector<PatternGenerator::hood>
-PatternGenerator::expandWildcards(const PatternGenerator::hood &p, char c, const vector<char> &exp) {
+PatternGenerator::expandWildcards(const PatternGenerator::hood& p, char c, const vector<char>& exp) {
   vector<PatternGenerator::hood> h;
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
@@ -164,13 +164,13 @@ PatternGenerator::expandWildcards(const PatternGenerator::hood &p, char c, const
   return h;
 }
 
-vector<PatternGenerator::hood> PatternGenerator::expandWildcards(const vector<PatternGenerator::hood> &p,
+vector<PatternGenerator::hood> PatternGenerator::expandWildcards(const vector<PatternGenerator::hood>& p,
                                                                  char c,
-                                                                 const vector<char> &exp) {
+                                                                 const vector<char>& exp) {
   vector<PatternGenerator::hood> pat;
-  for (const auto &h : p) {
+  for (const auto& h : p) {
     auto v = expandWildcards(h, c, exp);
-    for (const auto &hh : v) {
+    for (const auto& hh : v) {
       pat.push_back(hh);
     }
   };
@@ -182,7 +182,7 @@ vector<PatternGenerator::hood> PatternGenerator::expandWildcards(const vector<Pa
   }
 }
 
-std::array<std::array<int, 3>, 3> PatternGenerator::convert(const PatternGenerator::hood &h) {
+std::array<std::array<int, 3>, 3> PatternGenerator::convert(const PatternGenerator::hood& h) {
   std::array<std::array<int, 3>, 3> pats;
 
   for (int i = 0; i < 3; i++) {
@@ -220,5 +220,5 @@ std::pair<bool, Move> PatternGenerator::next() {
   return {true, Move::pass(color_)};
 }
 
-PatternGenerator::PatternGenerator(const Board &b, int color, const std::vector<pos> &moves) :
+PatternGenerator::PatternGenerator(const Board& b, int color, const std::vector<pos>& moves) :
     board_(b), color_(color), moves_(moves), m_(0) {}

@@ -27,21 +27,21 @@ struct MonteCarloNode {
 
   Move move();
 
-  double winPercentage(Move &m) {
-    auto &x = *next_[m];
+  double winPercentage(Move& m) {
+    auto& x = *next_[m];
     return x.w_ * 1.0 / x.n_;
   }
 
-  double visits(Move &m) {
-    auto &x = *next_[m];
+  double visits(Move& m) {
+    auto& x = *next_[m];
     return x.n_;
   }
 
-  void initNext(const Board &board, int player, const std::vector<double> &komi, std::pair<Move, Move> last,
-                std::map<int, std::unordered_set<size_t>> &history);
+  void initNext(const Board& board, int player, const std::vector<double>& komi, std::pair<Move, Move> last,
+                std::map<int, std::unordered_set<size_t>>& history);
 
-  int select(Board &board, int player, const std::vector<double> &komi, std::pair<Move, Move> last,
-             std::map<int, std::unordered_set<size_t>> &history);
+  int select(Board& board, int player, const std::vector<double>& komi, std::pair<Move, Move> last,
+             std::map<int, std::unordered_set<size_t>>& history);
 
-  static std::array<std::array<int, SIZE>, SIZE> cfgDistance(const Board &board, const Move &m);
+  static std::array<std::array<int, SIZE>, SIZE> cfgDistance(const Board& board, const Move& m);
 };

@@ -4,7 +4,7 @@
 
 #include "CaptureGenerator.h"
 
-CaptureGenerator::CaptureGenerator(const Board &b, int color, const std::vector<pos> &moves) :
+CaptureGenerator::CaptureGenerator(const Board& b, int color, const std::vector<pos>& moves) :
     board_(b), color_(color), moves_(moves), m_(0) {}
 
 std::pair<bool, Move> CaptureGenerator::next() {

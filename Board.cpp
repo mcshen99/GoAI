@@ -31,7 +31,7 @@ vector<pos> Board::getCaptured(pos position, int color) const {
   visited[position.first][position.second] = true;
 
   while (!q.empty()) {
-    pos &next = q.front();
+    pos& next = q.front();
     q.pop();
 
     int a = next.first;
@@ -75,7 +75,7 @@ int Board::liberties(pos p) const {
   int count = 0;
 
   while (!q.empty()) {
-    pos &next = q.front();
+    pos& next = q.front();
     q.pop();
 
     int a = next.first;
@@ -120,7 +120,7 @@ vector<pos> Board::fixAtari(pos p, int playerColor) const {
   vector<pos> touching;
 
   while (!q.empty()) {
-    pos &next = q.front();
+    pos& next = q.front();
     q.pop();
 
     int a = next.first;
@@ -171,7 +171,7 @@ vector<pos> Board::fixAtari(pos p, int playerColor) const {
   return answers;
 }
 
-vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t> &playerHistory) const {
+vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& playerHistory) const {
   vector<Move> moves;
   for (int i = 0; i < SIZE; ++i) {
     for (int j = 0; j < SIZE; ++j) {
@@ -222,8 +222,8 @@ vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t> &p
   return moves;
 }
 
-bool Board::isSuicide(const Move &move) const {
-  const pos &p = move.getCoor();
+bool Board::isSuicide(const Move& move) const {
+  const pos& p = move.getCoor();
   int c = move.getColor();
   board_[p.first][p.second] = c;
 
@@ -253,11 +253,11 @@ bool Board::isSuicide(const Move &move) const {
   return true;
 }
 
-const array<array<int, SIZE>, SIZE> &Board::getBoard() const {
+const array<array<int, SIZE>, SIZE>& Board::getBoard() const {
   return board_;
 }
 
-bool Board::canMove(const Move &m) const {
+bool Board::canMove(const Move& m) const {
   if (!inBounds(m.getCoor())) {
     return false;
   }
@@ -272,7 +272,7 @@ bool Board::canMove(const Move &m) const {
   return true;
 }
 
-void Board::move(const Move &m) {
+void Board::move(const Move& m) {
   if (m.isResign()) {
     return;
   }
@@ -295,14 +295,14 @@ void Board::move(const Move &m) {
       continue;
     }
     auto captured = getCaptured({x, y}, board_[x][y]);
-    for (pos &p : captured) {
+    for (pos& p : captured) {
       hash_ ^= (board_[p.first][p.second] * TABLE[p.first][p.second]);
       board_[p.first][p.second] = 0;
     }
   }
 }
 
-size_t Board::getHash(const Move &m) const {
+size_t Board::getHash(const Move& m) const {
   if (m.isResign()) {
     return hash_;
   }
@@ -328,7 +328,7 @@ size_t Board::getHash(const Move &m) const {
       continue;
     }
     auto captured = getCaptured({x, y}, board_[x][y]);
-    for (pos &p : captured) {
+    for (pos& p : captured) {
       hash ^= (board_[p.first][p.second] * TABLE[p.first][p.second]);
       allCaptures.push_back({board_[p.first][p.second], p});
       board_[p.first][p.second] = 0;
@@ -336,14 +336,14 @@ size_t Board::getHash(const Move &m) const {
   }
 
   board_[a][b] = 0;
-  for (auto &capture : allCaptures) {
+  for (auto& capture : allCaptures) {
     board_[capture.second.first][capture.second.second] = capture.first;
   }
 
   return hash;
 }
 
-bool Board::operator==(const Board &b) const {
+bool Board::operator==(const Board& b) const {
   return board_ == b.board_;
 }
 
@@ -357,7 +357,7 @@ array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) const {
     visited[l.first][l.second] = true;
 
     while (!q.empty()) {
-      pos &next = q.front();
+      pos& next = q.front();
       q.pop();
 
       int a = next.first;
@@ -388,7 +388,7 @@ array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) const {
         q.push({i, j});
 
         while (!q.empty()) {
-          pos &next = q.front();
+          pos& next = q.front();
           q.pop();
 
           int a = next.first;
@@ -474,8 +474,8 @@ bool Board::isEmpty(pos p, int s) const {
   return true;
 }
 
-ostream &operator<<(ostream &s, const Board &b) {
-  for (auto &i : b.getBoard()) {
+ostream& operator<<(ostream& s, const Board& b) {
+  for (auto& i : b.getBoard()) {
     for (auto j : i) {
       if (j == 0) {
         s << '.';

@@ -25,27 +25,27 @@ class GtpGame {
   bool debug_;
 
  public:
-  GtpGame(const std::vector<std::shared_ptr<Player>> &players, const std::vector<double> &komi, bool debug) :
+  GtpGame(const std::vector<std::shared_ptr<Player>>& players, const std::vector<double>& komi, bool debug) :
       players_(players), board_(), states_(), history_(), resigned_(players.size()), numPasses_(0), numOut_(0),
       komi_(komi), debug_(debug) {}
 
-  GtpGame(const GtpGame &g) = default;
-  GtpGame &operator=(const GtpGame &g) = default;
+  GtpGame(const GtpGame& g) = default;
+  GtpGame& operator=(const GtpGame& g) = default;
   ~GtpGame() = default;
 
   void setKomi(int player, double komi) {
     komi_.at(player) = komi;
   }
 
-  const Board &getBoard() const {
+  const Board& getBoard() const {
     return board_;
   }
 
-  const std::vector<std::shared_ptr<Player>> &getPlayers() const {
+  const std::vector<std::shared_ptr<Player>>& getPlayers() const {
     return players_;
   }
 
-  const std::vector<double> &getKomi() const {
+  const std::vector<double>& getKomi() const {
     return komi_;
   }
 
@@ -106,11 +106,11 @@ class GtpGame {
 
 class GtpException : public std::runtime_error {
  public:
-  GtpException(const std::string &msg) : runtime_error(msg), msg_(msg) {}
+  GtpException(const std::string& msg) : runtime_error(msg), msg_(msg) {}
 
-  GtpException(const std::string &msg, const std::string &what) : runtime_error(what), msg_(msg) {}
+  GtpException(const std::string& msg, const std::string& what) : runtime_error(what), msg_(msg) {}
 
-  const std::string &getMsg() const {
+  const std::string& getMsg() const {
     return msg_;
   }
 
@@ -120,9 +120,9 @@ class GtpException : public std::runtime_error {
 
 class Gtp {
  public:
-  Gtp(std::vector<std::shared_ptr<Player>> &players, bool debug = false);
+  Gtp(std::vector<std::shared_ptr<Player>>& players, bool debug = false);
 
-  bool process(const std::string &input, std::string &output);
+  bool process(const std::string& input, std::string& output);
   void run();
 
  private:
@@ -137,19 +137,19 @@ class Gtp {
 
   const static vertex pass;
 
-  std::vector<std::string> split(const std::string &s);
+  std::vector<std::string> split(const std::string& s);
 
-  void parse(const std::string &s, int &i);
+  void parse(const std::string& s, int& i);
 
-  void parse(const std::string &s, bool &b);
+  void parse(const std::string& s, bool& b);
 
-  void parse(const std::string &s, float &f);
+  void parse(const std::string& s, float& f);
 
-  void parse(const std::string &s, vertex &v);
+  void parse(const std::string& s, vertex& v);
 
-  void parse(const std::string &s, color &c);
+  void parse(const std::string& s, color& c);
 
-  void parse(const std::string &s, Move &m);
+  void parse(const std::string& s, Move& m);
 
   int protocol_version() const;
 
@@ -157,7 +157,7 @@ class Gtp {
 
   std::string version() const;
 
-  bool known_command(const std::string &command_name) const;
+  bool known_command(const std::string& command_name) const;
 
   void boardsize(int size);
 
@@ -165,7 +165,7 @@ class Gtp {
 
   void komi(float new_komi);
 
-  void play(const Move &m);
+  void play(const Move& m);
 
   Move genmove(int color);
 
@@ -190,19 +190,19 @@ class Gtp {
 
   std::string response();
 
-  std::string response(const std::set<std::string> &strings);
+  std::string response(const std::set<std::string>& strings);
 
   std::string response(bool b);
 
   std::string response(int i);
 
-  std::string response(const std::string &s);
+  std::string response(const std::string& s);
 
-  std::string response(const color &c);
+  std::string response(const color& c);
 
-  std::string response(const Move &m);
+  std::string response(const Move& m);
 
-  std::string wrap(const std::string &id, const std::string &resp);
+  std::string wrap(const std::string& id, const std::string& resp);
 
-  std::string response(const vertex &v);
+  std::string response(const vertex& v);
 };

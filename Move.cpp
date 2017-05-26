@@ -31,7 +31,7 @@ Move Move::resign(int color) {
   return {{-1, -1}, color, MoveType::RESIGN};
 }
 
-ostream &operator<<(ostream &s, const Move &m) {
+ostream& operator<<(ostream& s, const Move& m) {
   if (m.isResign()) {
     return s << "R";
   }
@@ -43,6 +43,6 @@ ostream &operator<<(ostream &s, const Move &m) {
   return s << m.getColor() << ": " << m.getCoor().first << ", " << m.getCoor().second;
 }
 
-bool Move::operator==(const Move &m) const {
+bool Move::operator==(const Move& m) const {
   return move_ == m.move_ && color_ == m.getColor() && coor_ == m.getCoor();
 }

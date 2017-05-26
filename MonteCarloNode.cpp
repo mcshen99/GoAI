@@ -16,23 +16,23 @@ double MonteCarloNode::uct(int t) {
 }
 
 Move MonteCarloNode::move() {
-  auto element = std::max_element(next_.begin(), next_.end(), [](const auto &a, const auto &b) {
+  auto element = std::max_element(next_.begin(), next_.end(), [](const auto& a, const auto& b) {
     return a.second->n_ - a.second->pn_ < b.second->n_ - b.second->pn_;
   });
 
   return element->first;
 }
 
-void MonteCarloNode::initNext(const Board &board, int player, const vector<double> &komi, std::pair<Move, Move> last,
-                              std::map<int, std::unordered_set<size_t>> &history) {
-  const auto &playerHistory = history[((player + 1) % 2)];
+void MonteCarloNode::initNext(const Board& board, int player, const vector<double>& komi, std::pair<Move, Move> last,
+                              std::map<int, std::unordered_set<size_t>>& history) {
+  const auto& playerHistory = history[((player + 1) % 2)];
   int color = player + 1;
   vector<Move> moves = board.getValidMoves(color, playerHistory);
 
   //for each move, add to next
   auto cfgMap = cfgDistance(board, last.second);
 
-  for (const auto &it : moves) {
+  for (const auto& it : moves) {
     next_[it] = std::make_shared<MonteCarloNode>();
     next_[it]->p_ = (player + 1) % 2;
     next_[it]->w_ = 5;
@@ -100,17 +100,17 @@ void MonteCarloNode::initNext(const Board &board, int player, const vector<doubl
     }
   }
 
-  for (const auto &it : moves) {
+  for (const auto& it : moves) {
     next_[it]->n_ = next_[it]->pn_;
   }
 }
 
 int MonteCarloNode::select(
-    Board &board,
+    Board& board,
     int player,
-    const vector<double> &komi,
+    const vector<double>& komi,
     std::pair<Move, Move> last,
-    map<int, unordered_set<size_t>> &history) {
+    map<int, unordered_set<size_t>>& history) {
   if (n_ < kN + pn_) {
     RandomPlayout rp(komi);
     int winner = rp.simulate(board, player, last, history);
@@ -136,7 +136,7 @@ int MonteCarloNode::select(
     return winner;
   }
 
-  auto element = max_element(next_.begin(), next_.end(), [this](const auto &a, const auto &b) {
+  auto element = max_element(next_.begin(), next_.end(), [this](const auto& a, const auto& b) {
     return a.second->uct(n_) < b.second->uct(n_);
   });
 
@@ -151,7 +151,7 @@ int MonteCarloNode::select(
   return winner;
 }
 
-std::array<std::array<int, SIZE>, SIZE> MonteCarloNode::cfgDistance(const Board &board, const Move &m) {
+std::array<std::array<int, SIZE>, SIZE> MonteCarloNode::cfgDistance(const Board& board, const Move& m) {
   // common fate graph
   std::array<std::array<int, SIZE>, SIZE> cfgMap;
   for (int i = 0; i < SIZE; i++) {
@@ -182,7 +182,7 @@ std::array<std::array<int, SIZE>, SIZE> MonteCarloNode::cfgDistance(const Board 
         continue;
       }
       int before = cfgMap[d.first][d.second];
-      const auto &b = board.getBoard();
+      const auto& b = board.getBoard();
       if (b[d.first][d.second] != 0 && b[d.first][d.second] == b[c.first][c.second]) {
         cfgMap[d.first][d.second] = cfgMap[c.first][c.second];
       } else {

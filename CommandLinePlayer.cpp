@@ -14,7 +14,7 @@ using std::unordered_set;
 
 CommandLinePlayer::CommandLinePlayer(int color) : color_(color) {}
 
-Move CommandLinePlayer::move(const Board &board, const std::vector<Move> &history) {
+Move CommandLinePlayer::move(const Board& board, const std::vector<Move>& history) {
   cout << "Please enter your move: " << endl;
 
   while (true) {
@@ -39,6 +39,6 @@ Move CommandLinePlayer::move(const Board &board, const std::vector<Move> &histor
   }
 }
 
-ostream &CommandLinePlayer::comment(ostream &s) const {
+ostream& CommandLinePlayer::comment(ostream& s) const {
   return s;
 }

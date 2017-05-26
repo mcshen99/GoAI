@@ -17,7 +17,7 @@ class MoveGenerator {
   pos current_;
   int count_;
 
-  const Board &board_;
+  const Board& board_;
   int color_;
 
   static std::default_random_engine gen_;
@@ -25,7 +25,7 @@ class MoveGenerator {
   static std::uniform_real_distribution<double> real_;
 
  public:
-  MoveGenerator(const Board &b, int color, const std::vector<pos> &moves);
+  MoveGenerator(const Board& b, int color, const std::vector<pos>& moves);
 
   std::pair<bool, Move> next();
 

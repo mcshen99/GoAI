@@ -9,7 +9,7 @@
 using std::vector;
 using std::shared_ptr;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   std::string mode = "cli";
   bool debug = false;
   for (int i = 1; i < argc; i++) {

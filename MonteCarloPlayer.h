@@ -21,7 +21,7 @@ class MonteCarloPlayer : public Player {
                                                                                          sims_(sims),
                                                                                          mod_(mod) {}
 
-  Move move(const Board &board, const std::vector<Move> &history) override;
+  Move move(const Board& board, const std::vector<Move>& history) override;
 
-  std::ostream &comment(std::ostream &s) const override;
+  std::ostream& comment(std::ostream& s) const override;
 };

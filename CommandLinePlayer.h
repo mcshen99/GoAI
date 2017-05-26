@@ -11,7 +11,7 @@ struct CommandLinePlayer : public Player {
  public:
   CommandLinePlayer(int color);
 
-  std::ostream &comment(std::ostream &s) const override;
+  std::ostream& comment(std::ostream& s) const override;
 
-  Move move(const Board &board, const std::vector<Move> &history) override;
+  Move move(const Board& board, const std::vector<Move>& history) override;
 };

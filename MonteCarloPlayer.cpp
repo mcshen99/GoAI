@@ -9,7 +9,7 @@ using std::map;
 using std::unordered_set;
 using std::hash;
 
-Move MonteCarloPlayer::move(const Board &board, const std::vector<Move> &history) {
+Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history) {
   log.str(std::string());
 
   MonteCarloNode root;
@@ -24,7 +24,7 @@ Move MonteCarloPlayer::move(const Board &board, const std::vector<Move> &history
     Board b;
     historyCopy[0].insert(b.getHash());
     int player = 0;
-    for (const auto &move : history) {
+    for (const auto& move : history) {
       b.move(move);
       historyCopy[(player++) % 2].insert(b.getHash());
     }
@@ -49,6 +49,6 @@ Move MonteCarloPlayer::move(const Board &board, const std::vector<Move> &history
   return m;
 }
 
-ostream &MonteCarloPlayer::comment(ostream &s) const {
+ostream& MonteCarloPlayer::comment(ostream& s) const {
   return s << log.str() << std::flush;
 }

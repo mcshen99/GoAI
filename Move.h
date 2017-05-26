@@ -25,13 +25,13 @@ struct Move {
   static Move pass(int color);
   static Move resign(int color);
 
-  bool operator==(const Move &m) const;
+  bool operator==(const Move& m) const;
 };
 
 namespace std {
 template<>
 struct hash<Move> {
-  size_t operator()(const Move &move) const {
+  size_t operator()(const Move& move) const {
     if (move.isResign()) {
       return -31;
     } else if (!move.isPass()) {

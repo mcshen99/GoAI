@@ -9,14 +9,14 @@ const int RandomPlayout::dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
 RandomPlayout::RandomPlayout(vector<double> komi) : komi_(komi) {}
 
 //implement gen_playout (filter bad moves), then in move pick a random move (if none, then pass)
-Move RandomPlayout::move(const Board &board, int color, const std::vector<Move> &lastMoves) {
+Move RandomPlayout::move(const Board& board, int color, const std::vector<Move>& lastMoves) {
   //to end the game, need to check for moves that you would not make in end state
   //ideal ending state: everything has 2 eyes or seki (neither can kill the other)
   //so there is no move you can make, so all moves are bad
   //list of bad moves: suicide (illegal), next move opponent can kill (self-atari)
 
   vector<pos> heuristicMoves;
-  for (auto &m : lastMoves) {
+  for (auto& m : lastMoves) {
     int x = m.getCoor().first;
     int y = m.getCoor().second;
     for (int i = -1; i <= 1; i++) {
@@ -36,10 +36,10 @@ Move RandomPlayout::move(const Board &board, int color, const std::vector<Move> 
   return Move::pass(color);
 }
 
-int RandomPlayout::simulate(Board &board,
+int RandomPlayout::simulate(Board& board,
                             int player,
                             std::pair<Move, Move> last,
-                            map<int, unordered_set<size_t>> &history) {
+                            map<int, unordered_set<size_t>>& history) {
   //if 2 players pass, game ends
   //need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
   bool lastPass = false;
@@ -63,7 +63,7 @@ int RandomPlayout::simulate(Board &board,
       }
     } else {
       lastPass = false;
-      unordered_set<size_t> &playerHistory = history[(player + 1) % 2];
+      unordered_set<size_t>& playerHistory = history[(player + 1) % 2];
       if (playerHistory.find(board.getHash(m)) != playerHistory.end()) {
         lastPass = true;
       } else {
@@ -103,7 +103,7 @@ int RandomPlayout::simulate(Board &board,
   return winner;
 }
 
-bool RandomPlayout::isGroup(const Board &board, const Move &m) {
+bool RandomPlayout::isGroup(const Board& board, const Move& m) {
   const int dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
 
   pos p = m.getCoor();
@@ -122,14 +122,14 @@ bool RandomPlayout::isGroup(const Board &board, const Move &m) {
   return group;
 }
 
-bool RandomPlayout::isAtari(const Board &board, const Move &m) {
-  return Board::placeAndTest(board, {m}, [&m](const Board &b) {
+bool RandomPlayout::isAtari(const Board& board, const Move& m) {
+  return Board::placeAndTest(board, {m}, [&m](const Board& b) {
     return b.liberties(m.getCoor()) == 1;
   });
 }
 
-bool RandomPlayout::isCapture(const Board &board, const Move &m) {
-  return Board::placeAndTest(board, {m}, [&m](const Board &b) {
+bool RandomPlayout::isCapture(const Board& board, const Move& m) {
+  return Board::placeAndTest(board, {m}, [&m](const Board& b) {
     const int dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
 
     int c = m.getCoor().first;
@@ -153,7 +153,7 @@ bool RandomPlayout::isCapture(const Board &board, const Move &m) {
   });
 }
 
-bool RandomPlayout::isEyeFilling(const Board &board, const Move &m) {
+bool RandomPlayout::isEyeFilling(const Board& board, const Move& m) {
   int a = m.getCoor().first;
   int b = m.getCoor().second;
 
@@ -191,7 +191,7 @@ bool RandomPlayout::isEyeFilling(const Board &board, const Move &m) {
   return count <= 1 + center;
 }
 
-bool RandomPlayout::isOkMove(const Board &board, const Move &m) {
+bool RandomPlayout::isOkMove(const Board& board, const Move& m) {
   return !(board.isSuicide(m) || (isGroup(board, m) && isAtari(board, m) && !isCapture(board, m)) ||
       isEyeFilling(board, m));
 }

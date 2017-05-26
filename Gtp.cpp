@@ -7,7 +7,7 @@ using namespace std;
 
 const Gtp::vertex Gtp::pass = {-1, -1};
 
-Gtp::Gtp(std::vector<std::shared_ptr<Player>> &players, bool debug) : game_(players, vector<double>(players.size()),
+Gtp::Gtp(std::vector<std::shared_ptr<Player>>& players, bool debug) : game_(players, vector<double>(players.size()),
                                                                             debug) {}
 
 void Gtp::run() {
@@ -25,13 +25,13 @@ void Gtp::run() {
       if (done) {
         break;
       }
-    } catch (const GtpException &e) {
+    } catch (const GtpException& e) {
       cout << e.getMsg();
     }
   }
 }
 
-bool Gtp::process(const string &input, string &output) {
+bool Gtp::process(const string& input, string& output) {
   if (input.empty()) {
     return false;
   }
@@ -54,13 +54,13 @@ bool Gtp::process(const string &input, string &output) {
       try {
         id = to_string(stoi(v.at(0)));
         v.erase(v.begin());
-      } catch (const std::exception &e) {
+      } catch (const std::exception& e) {
         throw GtpException("unknown command");
       }
     }
 
     // runtime is unimportant
-    const string &cmd = v.at(0);
+    const string& cmd = v.at(0);
     string args;
     if (v.size() >= 1) {
       for (size_t i = 1; i < v.size(); i++) {
@@ -114,16 +114,16 @@ bool Gtp::process(const string &input, string &output) {
     } else {
       throw GtpException("unknown command");
     }
-  } catch (const GtpException &e) {
+  } catch (const GtpException& e) {
     throw GtpException("?" + id + " " + e.getMsg() + "\n\n");
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     throw GtpException("?" + id + " " + "syntax error" + "\n\n");
   }
 
   return false;
 }
 
-vector<string> Gtp::split(const string &s) {
+vector<string> Gtp::split(const string& s) {
   vector<string> t;
   stringstream ss;
   ss.str(s);
@@ -137,19 +137,19 @@ vector<string> Gtp::split(const string &s) {
   return t;
 }
 
-void Gtp::parse(const string &s, int &i) {
+void Gtp::parse(const string& s, int& i) {
   i = stoi(s);
 }
 
-void Gtp::parse(const string &s, bool &b) {
+void Gtp::parse(const string& s, bool& b) {
   b = (s == "true");
 }
 
-void Gtp::parse(const string &s, float &f) {
+void Gtp::parse(const string& s, float& f) {
   f = stof(s);
 }
 
-void Gtp::parse(const string &s, Gtp::vertex &v) {
+void Gtp::parse(const string& s, Gtp::vertex& v) {
   string t;
   std::transform(s.begin(), s.end(), back_inserter(t), ::tolower);
   if (t == "pass") {
@@ -165,7 +165,7 @@ void Gtp::parse(const string &s, Gtp::vertex &v) {
   v.second = stoi(t.substr(1)) - 1;
 }
 
-void Gtp::parse(const string &s, Gtp::color &c) {
+void Gtp::parse(const string& s, Gtp::color& c) {
   char t = (char) tolower(s.at(0));
   if (t == 'b') {
     c = color::BLACK;
@@ -174,7 +174,7 @@ void Gtp::parse(const string &s, Gtp::color &c) {
   }
 }
 
-void Gtp::parse(const string &s, Move &m) {
+void Gtp::parse(const string& s, Move& m) {
   vector<string> t = split(s);
   color c = color::BLACK;
   parse(t.at(0), c);
@@ -199,7 +199,7 @@ string Gtp::version() const {
   return "1.0";
 }
 
-bool Gtp::known_command(const std::string &command_name) const {
+bool Gtp::known_command(const std::string& command_name) const {
   auto known = list_commands();
   return known.find(command_name) != known.end();
 }
@@ -218,7 +218,7 @@ void Gtp::komi(float new_komi) {
   game_.setKomi(1, new_komi);
 }
 
-void Gtp::play(const Move &m) {
+void Gtp::play(const Move& m) {
   bool legal = game_.makeMove(m.getColor() - 1, m);
   if (!legal) {
     throw GtpException("illegal move");
@@ -242,7 +242,7 @@ string Gtp::response() {
   return "";
 }
 
-string Gtp::wrap(const string &id, const string &resp) {
+string Gtp::wrap(const string& id, const string& resp) {
   if (resp.empty()) {
     return "=" + id + "\n\n";
   } else {
@@ -250,9 +250,9 @@ string Gtp::wrap(const string &id, const string &resp) {
   }
 }
 
-string Gtp::response(const set<string> &strings) {
+string Gtp::response(const set<string>& strings) {
   string resp;
-  for (auto &s : strings) {
+  for (auto& s : strings) {
     resp += s;
     resp += "\n";
   }
@@ -270,11 +270,11 @@ string Gtp::response(int i) {
   return to_string(i);
 }
 
-std::string Gtp::response(const std::string &s) {
+std::string Gtp::response(const std::string& s) {
   return s;
 }
 
-std::string Gtp::response(const color &c) {
+std::string Gtp::response(const color& c) {
   if (c == color::BLACK) {
     return "b";
   } else {
@@ -282,7 +282,7 @@ std::string Gtp::response(const color &c) {
   }
 }
 
-std::string Gtp::response(const vertex &v) {
+std::string Gtp::response(const vertex& v) {
   char c = (char) v.first + 'a';
   if (c >= 'i') {
     c++;
@@ -291,7 +291,7 @@ std::string Gtp::response(const vertex &v) {
   return string(1, c) + to_string(v.second + 1);
 }
 
-std::string Gtp::response(const Move &m) {
+std::string Gtp::response(const Move& m) {
   if (m.isPass()) {
     return "pass";
   } else if (m.isResign()) {
