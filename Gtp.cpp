@@ -10,7 +10,8 @@ using namespace std;
 const Gtp::vertex Gtp::pass = {-1, -1};
 
 
-Gtp::Gtp(std::vector<std::shared_ptr<Player>>& players) : game_(players, vector<double>(players.size())){}
+Gtp::Gtp(std::vector<std::shared_ptr<Player>>& players, bool debug) : game_(players, vector<double>(players.size()),
+                                                                            debug) {}
 
 void Gtp::run() {
     while (true) {
@@ -73,7 +74,7 @@ bool Gtp::process(const string& input, string& output) {
 				args.pop_back();
 			}
         }
-		
+
         if (cmd == "play") {
             Move m = Move::pass(1);
             parse(args, m);
@@ -213,7 +214,7 @@ void Gtp::boardsize(int size) {
 }
 
 void Gtp::clear_board() {
-    game_ = GtpGame(game_.getPlayers(), game_.getKomi());
+    game_ = GtpGame(game_.getPlayers(), game_.getKomi(), game_.isDebug());
 }
 
 void Gtp::komi(float new_komi) {

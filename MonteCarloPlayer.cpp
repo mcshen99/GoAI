@@ -11,6 +11,8 @@ using std::unordered_set;
 using std::hash;
 
 Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history) {
+	log.str(std::string());
+
 	MonteCarloNode root;
 	const clock_t begin = clock();
 	for (int i = 0; i < sims_; i++) {
@@ -41,15 +43,13 @@ Move MonteCarloPlayer::move(const Board& board, const std::vector<Move>& history
 	Move m = root.move();
 	winP_ = root.winPercentage(m);
 
-	if (mod_ > 0) {
-		cout << sims_ / (float(clock() - begin) /  CLOCKS_PER_SEC) << " sims / sec" << endl;
-		comment(cout);
-		cout << "Visits: " << root.visits(m) << endl;
-	}
+	log << sims_ / (float(clock() - begin) /  CLOCKS_PER_SEC) << " sims / sec" << endl;
+	log << "Winning probability: " << winP_ << endl;
+	log << "Visits: " << root.visits(m) << endl;
 
 	return m;
 }
 
 ostream& MonteCarloPlayer::comment(ostream& s) const {
-	return s << "Winning probability: " << winP_ << endl;
+	return s << log.str() << std::flush;
 }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include <unordered_set>
+#include <iostream>
 
 #include "Player.h"
 #include "Game.h"
@@ -21,11 +22,12 @@ private:
     int numPasses_;
     int numOut_;
     std::vector<double> komi_;
+    bool debug_;
 
 public:
-    GtpGame(const std::vector<std::shared_ptr<Player>>& players, const std::vector<double>& komi) :
+    GtpGame(const std::vector<std::shared_ptr<Player>>& players, const std::vector<double>& komi, bool debug) :
             players_(players), board_(), states_(), history_(), resigned_(players.size()), numPasses_(0), numOut_(0),
-            komi_(komi) {}
+            komi_(komi), debug_(debug) {}
 
     GtpGame(const GtpGame &g) = default;
     GtpGame& operator= (const GtpGame &g) = default;
@@ -47,6 +49,10 @@ public:
         return komi_;
     }
 
+    bool isDebug() const {
+        return debug_;
+    }
+
     int nextPlayer(int player) {
         for (int i = player + 1; i != player; i = (i + 1) % players_.size()) {
             if (!resigned_[i]) {
@@ -58,7 +64,11 @@ public:
     }
 
     Move move(int player) {
-        return players_.at(player)->move(board_, history_);
+        Move m = players_.at(player)->move(board_, history_);
+        if (debug_) {
+            players_.at(player)->comment(std::cerr);
+        }
+        return m;
     }
 
     bool makeMove(int player, Move m) {
@@ -110,7 +120,7 @@ private:
 
 class Gtp {
 public:
-    Gtp(std::vector<std::shared_ptr<Player>>& players);
+    Gtp(std::vector<std::shared_ptr<Player>>& players, bool debug = false);
 
     bool process(const std::string &input, std::string& output);
     void run();

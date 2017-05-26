@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sstream>
 #include "Player.h"
 #include "MonteCarloNode.h"
 
@@ -11,6 +12,8 @@ private:
 	const int sims_;
 	int mod_;
 	double winP_;
+
+	std::ostringstream log;
 
 public:
 	MonteCarloPlayer(int color, std::vector<double> komi, int sims = 10000, int mod = 0) : player_(color - 1), komi_(komi), sims_(sims), mod_(mod) {}
