@@ -39,6 +39,11 @@ int main(int argc, char* argv[]) {
     vector<shared_ptr<Player>> gtpPlayers{shared_ptr<Player>(r1), shared_ptr<Player>(r2)};
     Gtp gtp(gtpPlayers, debug);
     gtp.run();
+  } else if (mode == "prof") {
+    auto p = std::make_shared<MonteCarloPlayer>(1, komi, 1000);
+    Board b;
+    vector<Move> history;
+    p->move(b, history);
   }
 
   return 0;

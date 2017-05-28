@@ -29,7 +29,7 @@ void MonteCarloNode::initNext(
     int player,
     const vector<double>& komi,
     std::pair<Move, Move> last,
-    std::map<int, std::unordered_set<size_t>>& history) {
+    std::array<std::unordered_set<size_t>, 2>& history) {
   const auto& playerHistory = history[((player + 1) % 2)];
   int color = player + 1;
   vector<Move> moves = board.getValidMoves(color, playerHistory);
@@ -110,7 +110,7 @@ int MonteCarloNode::select(
     int player,
     const vector<double>& komi,
     std::pair<Move, Move> last,
-    map<int, unordered_set<size_t>>& history) {
+    array<unordered_set<size_t>, 2>& history) {
   if (n_ < kN + pn_) {
     RandomPlayout rp(komi);
     int winner = rp.simulate(board, player, last, history);

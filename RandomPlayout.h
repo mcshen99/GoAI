@@ -3,6 +3,7 @@
 #include <random>
 #include "Board.h"
 #include <map>
+#include <unordered_map>
 #include "MoveGenerator.h"
 
 class RandomPlayout {
@@ -32,7 +33,7 @@ class RandomPlayout {
       Board& board,
       int player,
       std::pair<Move, Move> lastMove,
-      std::map<int, std::unordered_set<size_t>>& history);
+      std::array<std::unordered_set<size_t>, 2>& history);
 
   static bool isOkMove(const Board& board, const Move& m, const std::unordered_set<size_t>& history);
 };

@@ -48,14 +48,14 @@ struct MonteCarloNode {
       int player,
       const std::vector<double>& komi,
       std::pair<Move, Move> last,
-      std::map<int, std::unordered_set<size_t>>& history);
+      std::array<std::unordered_set<size_t>, 2>& history);
 
   int select(
       Board& board,
       int player,
       const std::vector<double>& komi,
       std::pair<Move, Move> last,
-      std::map<int, std::unordered_set<size_t>>& history);
+      std::array<std::unordered_set<size_t>, 2>& history);
 
   static std::array<std::array<int, SIZE>, SIZE> cfgDistance(const Board& board, const Move& m);
 };

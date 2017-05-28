@@ -39,7 +39,7 @@ int RandomPlayout::simulate(
     Board& board,
     int player,
     std::pair<Move, Move> last,
-    map<int, unordered_set<size_t>>& history) {
+    array<unordered_set<size_t>, 2>& history) {
   //if 2 players pass, game ends
   //need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
   bool lastPass = false;
