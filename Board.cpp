@@ -261,6 +261,7 @@ bool Board::canMove(const Move& m) const {
   if (!inBounds(m.getCoor())) {
     return false;
   }
+
   if (board_[m.getCoor().first][m.getCoor().second] != 0) {
     return false;
   }

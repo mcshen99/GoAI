@@ -15,7 +15,18 @@ Move RandomPlayoutPlayer::move(const Board& board, const std::vector<Move>& hist
       last.push_back(history[index]);
     }
   }
-  return playout_.move(board, player_, last);
+
+  Board boardCopy(board);
+  std::map<int, std::unordered_set<size_t>> historyCopy;
+  Board b;
+  int player = 0;
+  for (const auto& m : history) {
+    historyCopy[(player++) % 2].insert(b.getHash());
+    b.move(m);
+  }
+  historyCopy[(player++) % 2].insert(b.getHash());
+
+  return playout_.move(board, player_, historyCopy[(player + 1) % 2], last);
 }
 
 RandomPlayoutPlayer::RandomPlayoutPlayer(int player, vector<double> komi)

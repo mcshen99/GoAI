@@ -8,13 +8,11 @@ const int RandomPlayout::dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
 
 RandomPlayout::RandomPlayout(vector<double> komi) : komi_(komi) {}
 
-//implement gen_playout (filter bad moves), then in move pick a random move (if none, then pass)
-Move RandomPlayout::move(const Board& board, int color, const std::vector<Move>& lastMoves) {
-  //to end the game, need to check for moves that you would not make in end state
-  //ideal ending state: everything has 2 eyes or seki (neither can kill the other)
-  //so there is no move you can make, so all moves are bad
-  //list of bad moves: suicide (illegal), next move opponent can kill (self-atari)
-
+Move RandomPlayout::move(
+    const Board& board,
+    int color,
+    const unordered_set<size_t>& history,
+    const std::vector<Move>& lastMoves) {
   vector<pos> heuristicMoves;
   for (auto& m : lastMoves) {
     int x = m.getCoor().first;
@@ -25,10 +23,11 @@ Move RandomPlayout::move(const Board& board, int color, const std::vector<Move>&
       }
     }
   }
+
   MoveGenerator moveGenerator(board, color, heuristicMoves);
   for (auto p = moveGenerator.next(); !p.first; p = moveGenerator.next()) {
     Move m = p.second;
-    if (isOkMove(board, m)) {
+    if (isOkMove(board, m, history)) {
       return m;
     }
   }
@@ -55,7 +54,7 @@ int RandomPlayout::simulate(
   }
 
   for (int count = 0; count < SIZE * SIZE * 3 / 2; ++count) {
-    Move m = move(board, player + 1, {lastMoves.begin(), lastMoves.end()});
+    Move m = move(board, player + 1, history[(player + 1) % 2], {lastMoves.begin(), lastMoves.end()});
     if (m.isPass()) {
       if (lastPass) {
         break;
@@ -64,16 +63,11 @@ int RandomPlayout::simulate(
       }
     } else {
       lastPass = false;
-      unordered_set<size_t>& playerHistory = history[(player + 1) % 2];
-      if (playerHistory.find(board.getHash(m)) != playerHistory.end()) {
-        lastPass = true;
-      } else {
-        board.move(m);
-        lastMoves.push_back(m);
-        playerHistory.insert(board.getHash(m));
-        if (lastMoves.size() > 2) {
-          lastMoves.pop_front();
-        }
+      board.move(m);
+      lastMoves.push_back(m);
+      history[(player + 1) % 2].insert(board.getHash());
+      if (lastMoves.size() > 2) {
+        lastMoves.pop_front();
       }
     }
     player = (player + 1) % 2;
@@ -194,7 +188,7 @@ bool RandomPlayout::isEyeFilling(const Board& board, const Move& m) {
   return count <= 1 + center;
 }
 
-bool RandomPlayout::isOkMove(const Board& board, const Move& m) {
-  return !(board.isSuicide(m) || (isGroup(board, m) && isAtari(board, m) && !isCapture(board, m)) ||
-      isEyeFilling(board, m));
+bool RandomPlayout::isOkMove(const Board& board, const Move& m, const unordered_set<size_t>& history) {
+  return board.canMove(m) && history.find(board.getHash(m)) == history.end() && !isEyeFilling(board, m)
+      && !(isGroup(board, m) && isAtari(board, m) && !isCapture(board, m));
 }

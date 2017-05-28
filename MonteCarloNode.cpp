@@ -18,7 +18,7 @@ double MonteCarloNode::uct(int t) {
 Move MonteCarloNode::move() {
   auto element = std::max_element(
       next_.begin(), next_.end(), [](const auto& a, const auto& b) {
-        return a.second->n_ - a.second->pn_ < b.second->n_ - b.second->pn_;
+        return a.second->n_ < b.second->n_;
       });
 
   return element->first;
@@ -39,11 +39,11 @@ void MonteCarloNode::initNext(
 
   for (const auto& it : moves) {
     next_[it] = std::make_shared<MonteCarloNode>();
-    next_[it]->p_ = (player + 1) % 2;
-    next_[it]->w_ = 5;
-    next_[it]->pn_ = 10;
+    next_[it]->p_ = player;
+    next_[it]->w_ = 50;
+    next_[it]->pn_ = 100;
     if (it.isPass()) {
-      next_[it]->pn_ += 100;
+      next_[it]->w_ -= 50;
       continue;
     }
 
@@ -53,13 +53,10 @@ void MonteCarloNode::initNext(
       if (dist < 3) {
         if (dist == 2) {
           next_[it]->w_ += 8;
-          next_[it]->pn_ += 8;
         } else if (dist == 1) {
           next_[it]->w_ += 22;
-          next_[it]->pn_ += 22;
         } else {
           next_[it]->w_ += 24;
-          next_[it]->pn_ += 24;
         }
       }
     }
@@ -67,10 +64,9 @@ void MonteCarloNode::initNext(
     int height = std::min(std::min(p.first, p.second), std::min(SIZE - 1 - p.first, SIZE - 1 - p.second));
     if (height <= 2 && board.isEmpty(p)) {
       if (height <= 1) {
-        next_[it]->pn_ += 10;
+        next_[it]->w_ -= 10;
       } else {
         next_[it]->w_ += 10;
-        next_[it]->pn_ += 10;
       }
     }
   }
@@ -84,11 +80,10 @@ void MonteCarloNode::initNext(
   CaptureGenerator capture(board, color, all);
   for (auto p = capture.next(); !p.first; p = capture.next()) {
     Move m = p.second;
-    if (RandomPlayout::isOkMove(board, m)) {
+    if (RandomPlayout::isOkMove(board, m, playerHistory)) {
       auto it = next_.find(m);
       if (it != next_.end()) {
         it->second->w_ += 15;
-        it->second->pn_ += 15;
       }
     }
   }
@@ -96,16 +91,16 @@ void MonteCarloNode::initNext(
   PatternGenerator pattern(board, color, all);
   for (auto p = pattern.next(); !p.first; p = pattern.next()) {
     Move m = p.second;
-    if (RandomPlayout::isOkMove(board, m)) {
+    if (RandomPlayout::isOkMove(board, m, playerHistory)) {
       auto it = next_.find(m);
       if (it != next_.end()) {
         it->second->w_ += 10;
-        it->second->pn_ += 10;
       }
     }
   }
 
   for (const auto& it : moves) {
+    next_[it]->w_ = std::min(std::max(0, next_[it]->w_), next_[it]->pn_);
     next_[it]->n_ = next_[it]->pn_;
   }
 }

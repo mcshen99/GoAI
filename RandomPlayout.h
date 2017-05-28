@@ -22,12 +22,17 @@ class RandomPlayout {
  public:
   RandomPlayout(std::vector<double> komi);
 
-  Move move(const Board& board, int player, const std::vector<Move>& lastMoves);
+  Move move(
+      const Board& board,
+      int player,
+      const std::unordered_set<size_t>& history,
+      const std::vector<Move>& lastMoves);
 
   int simulate(
-      Board& board, int player, std::pair<Move, Move> lastMove,
+      Board& board,
+      int player,
+      std::pair<Move, Move> lastMove,
       std::map<int, std::unordered_set<size_t>>& history);
 
-  static bool isOkMove(const Board& board, const Move& m);
-
+  static bool isOkMove(const Board& board, const Move& m, const std::unordered_set<size_t>& history);
 };
