@@ -3,12 +3,7 @@
 #include <iostream>
 #include <random>
 
-using std::queue;
-using std::ostream;
-using std::endl;
-using std::array;
-using std::vector;
-using std::cout;
+using namespace std;
 
 const int Board::dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
 const std::array<std::array<size_t, SIZE>, SIZE> Board::TABLE = Board::getTable();
@@ -19,25 +14,25 @@ bool Board::inBounds(pos position) const {
 
 vector<pos> Board::getCaptured(pos position, int color) const {
   vector<pos> v;
-  queue<pos> q;
+  v.reserve(SIZE * SIZE);
+  std::array<pos, SIZE * SIZE> s;
+  int ssize = 0;
 
   if (color == 0) {
     return v;
   }
 
-  q.push(position);
+  s[ssize++] = position;
 
   array<array<bool, SIZE>, SIZE> visited = {false};
   visited[position.first][position.second] = true;
 
-  while (!q.empty()) {
-    pos& next = q.front();
-    q.pop();
+  while (ssize > 0) {
+    pos next = s[--ssize];
 
     int a = next.first;
     int b = next.second;
-    visited[a][b] = true;
-    v.push_back({a, b});
+    v.emplace_back(a, b);
 
     for (int i = 0; i < 4; ++i) {
       int x = a + dirs[0][i];
@@ -51,8 +46,9 @@ vector<pos> Board::getCaptured(pos position, int color) const {
         return v;
       }
 
+      visited[x][y] = true;
       if (board_[x][y] == color) {
-        q.push({x, y});
+        s[ssize++] = {x, y};
       }
     }
   }
@@ -61,26 +57,25 @@ vector<pos> Board::getCaptured(pos position, int color) const {
 }
 
 int Board::liberties(pos p) const {
-  queue<pos> q;
+  std::array<pos, SIZE * SIZE> s;
+  int ssize = 0;
 
   int color = board_[p.first][p.second];
   if (color == 0) {
     return true;
   }
 
-  q.push(p);
+  s[ssize++] = p;
 
   array<array<bool, SIZE>, SIZE> visited = {false};
   visited[p.first][p.second] = true;
   int count = 0;
 
-  while (!q.empty()) {
-    pos& next = q.front();
-    q.pop();
+  while (ssize > 0) {
+    pos next = s[--ssize];
 
     int a = next.first;
     int b = next.second;
-    visited[a][b] = true;
 
     for (int i = 0; i < 4; ++i) {
       int x = a + dirs[0][i];
@@ -89,13 +84,13 @@ int Board::liberties(pos p) const {
         continue;
       }
 
+      visited[x][y] = true;
       if (board_[x][y] == 0) {
-        visited[x][y] = true;
         count++;
       }
 
       if (board_[x][y] == color) {
-        q.push({x, y});
+        s[ssize++] = {x, y};
       }
     }
   }
@@ -104,7 +99,8 @@ int Board::liberties(pos p) const {
 }
 
 vector<pos> Board::fixAtari(pos p, int playerColor) const {
-  queue<pos> q;
+  std::array<pos, SIZE * SIZE> s;
+  int ssize = 0;
 
   int color = board_[p.first][p.second];
   vector<pos> answers;
@@ -112,20 +108,18 @@ vector<pos> Board::fixAtari(pos p, int playerColor) const {
     return answers;
   }
 
-  q.push(p);
+  s[ssize++] = p;
 
   array<array<bool, SIZE>, SIZE> visited = {false};
   visited[p.first][p.second] = true;
   pos lib = p;
   vector<pos> touching;
+  touching.reserve(SIZE * SIZE);
 
-  while (!q.empty()) {
-    pos& next = q.front();
-    q.pop();
-
+  while (ssize > 0) {
+    pos next = s[--ssize];
     int a = next.first;
     int b = next.second;
-    visited[a][b] = true;
 
     for (int i = 0; i < 4; ++i) {
       int x = a + dirs[0][i];
@@ -135,17 +129,17 @@ vector<pos> Board::fixAtari(pos p, int playerColor) const {
       }
 
       if (board_[x][y] == 0) {
-        visited[x][y] = true;
         if (lib == p) {
           lib = {x, y};
         } else {
           return answers;
         }
       } else if (board_[x][y] == color) {
-        q.push({x, y});
+        s[ssize++] = {x, y};
       } else if (color == playerColor) {
-        touching.push_back({x, y});
+        touching.emplace_back(x, y);
       }
+      visited[x][y] = true;
     }
   }
 
@@ -329,7 +323,7 @@ size_t Board::getHash(const Move& m) const {
       continue;
     }
     auto captured = getCaptured({x, y}, board_[x][y]);
-    for (pos& p : captured) {
+    for (const pos& p : captured) {
       hash ^= (board_[p.first][p.second] * TABLE[p.first][p.second]);
       allCaptures.push_back({board_[p.first][p.second], p});
       board_[p.first][p.second] = 0;
@@ -358,12 +352,11 @@ array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) const {
     visited[l.first][l.second] = true;
 
     while (!q.empty()) {
-      pos& next = q.front();
+      pos next = q.front();
       q.pop();
 
       int a = next.first;
       int b = next.second;
-      visited[a][b] = true;
       deadBoard[a][b] = 0;
 
       for (int i = 0; i < 4; ++i) {
@@ -373,6 +366,7 @@ array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) const {
           continue;
         }
 
+        visited[x][y] = true;
         if (board_[x][y] == 0 || board_[x][y] == board_[l.first][l.second]) {
           q.push({x, y});
         }
@@ -389,7 +383,7 @@ array<array<int, SIZE>, SIZE> Board::score(vector<pos> locations) const {
         q.push({i, j});
 
         while (!q.empty()) {
-          pos& next = q.front();
+          pos next = q.front();
           q.pop();
 
           int a = next.first;

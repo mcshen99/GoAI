@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
     Board b;
     vector<Move> history;
     p->move(b, history);
+    p->comment(std::cout);
   }
 
   return 0;

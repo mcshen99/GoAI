@@ -38,7 +38,7 @@ Move MonteCarloPlayer::move(const Board& board, const vector<Move>& history) {
 
   log << sims_ / (float(clock() - begin) / CLOCKS_PER_SEC) << " sims / sec" << endl;
   log << "Winning probability: " << winP_ << endl;
-  log << "Visits: " << root.getNext().at(m)->priorVisits() << endl;
+  log << "Visits: " << root.getNext().at(m)->visits() << endl;
   if (mod_ > 0) {
     cout << log.str() << flush;
   }
