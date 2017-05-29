@@ -85,9 +85,9 @@ const vector<PatternGenerator::hood> PatternGenerator::PATTERNS_SOURCE = {
 
 };
 
-const set<array<array<int, 3>, 3>> PatternGenerator::PATTERNS = genPatterns(PATTERNS_SOURCE);
+const unordered_set<array<array<int, 3>, 3>, PatternHash> PatternGenerator::PATTERNS = genPatterns(PATTERNS_SOURCE);
 
-set<array<array<int, 3>, 3>>
+unordered_set<array<array<int, 3>, 3>, PatternHash>
 PatternGenerator::genPatterns(const vector<PatternGenerator::hood>& source) {
   vector<PatternGenerator::hood> pats = source;
   pats = expandWildcards(pats, '?', {'.', 'X', 'O', ' '});
@@ -98,7 +98,7 @@ PatternGenerator::genPatterns(const vector<PatternGenerator::hood>& source) {
   pats = apply(pats, flipHorizontal);
   pats = apply(pats, swapColors);
 
-  set<array<array<int, 3>, 3>> patterns;
+  unordered_set<array<array<int, 3>, 3>, PatternHash> patterns;
   for (const auto& h : pats) {
     patterns.insert(convert(h));
   }

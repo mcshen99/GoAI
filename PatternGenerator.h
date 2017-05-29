@@ -7,6 +7,19 @@
 #include "Move.h"
 #include "Board.h"
 
+struct PatternHash {
+  size_t operator() (const std::array<std::array<int, 3>, 3> &pattern) const {
+    size_t hash = 0;
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        hash *= 31;
+        hash += pattern[i][j];
+      }
+    }
+    return hash;
+  }
+};
+
 class PatternGenerator {
  public:
   std::pair<bool, Move> next();
@@ -20,7 +33,8 @@ class PatternGenerator {
   int m_;
 
   typedef std::array<std::string, 3> hood;
-  static std::set<std::array<std::array<int, 3>, 3>> genPatterns(const std::vector<hood>& source);
+  static std::unordered_set<std::array<std::array<int, 3>, 3>,
+      PatternHash> genPatterns(const std::vector<hood>& source);
 
   template<class F>
   static std::vector<hood> apply(const std::vector<hood>& p, F f) {
@@ -43,7 +57,8 @@ class PatternGenerator {
 
   // source patterns, X = 1, O = 2, x = !1, o = !2, ' ' = -1
   static const std::vector<hood> PATTERNS_SOURCE;
+  // TODO: 2.6% cpu. bitset is faster, and 4^9 bits = 32 kb = small.
   // 1 is current player, -1 is edge of board
-  static const std::set<std::array<std::array<int, 3>, 3>> PATTERNS;
+  static const std::unordered_set<std::array<std::array<int, 3>, 3>, PatternHash> PATTERNS;
 };
 
