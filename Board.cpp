@@ -13,89 +13,91 @@ bool Board::inBounds(pos position) const {
 }
 
 vector<pos> Board::getCaptured(pos position, int color) const {
-  vector<pos> v;
-  v.reserve(SIZE * SIZE);
-  std::array<pos, SIZE * SIZE> s;
-  int ssize = 0;
+  vector<pos> ret;
+  ret.reserve(SIZE * SIZE);
+  class CaptureHandler {
+    vector<pos>& v_;
+   public:
+    CaptureHandler(vector<pos>& v) : v_(v) {}
 
-  if (color == 0) {
-    return v;
-  }
-
-  s[ssize++] = position;
-
-  array<array<bool, SIZE>, SIZE> visited = {false};
-  visited[position.first][position.second] = true;
-
-  while (ssize > 0) {
-    pos next = s[--ssize];
-
-    int a = next.first;
-    int b = next.second;
-    v.emplace_back(a, b);
-
-    for (int i = 0; i < 4; ++i) {
-      int x = a + dirs[0][i];
-      int y = b + dirs[1][i];
-      if (!inBounds({x, y}) || visited[x][y]) {
-        continue;
-      }
-
-      if (board_[x][y] == 0) {
-        v.clear();
-        return v;
-      }
-
-      visited[x][y] = true;
-      if (board_[x][y] == color) {
-        s[ssize++] = {x, y};
-      }
+    void handlePiece(int a, int b) {
+      v_.emplace_back(a, b);
     }
+
+    void handleOpp(int a, int b) {};
+
+    bool handleLiberty(int a, int b) {
+      return true;
+    }
+  };
+
+  if (!floodfill(position, color, CaptureHandler(ret))) {
+    ret.clear();
   }
 
-  return v;
+  return ret;
+}
+
+bool Board::isCaptured(pos position, int color) const {
+  class CaptureHandler {
+   public:
+    void handlePiece(int a, int b) {}
+
+    void handleOpp(int a, int b) {};
+
+    bool handleLiberty(int a, int b) {
+      return true;
+    }
+  };
+
+  return floodfill(position, color, CaptureHandler());
 }
 
 int Board::liberties(pos p) const {
-  std::array<pos, SIZE * SIZE> s;
-  int ssize = 0;
-
-  int color = board_[p.first][p.second];
-  if (color == 0) {
-    return true;
-  }
-
-  s[ssize++] = p;
-
-  array<array<bool, SIZE>, SIZE> visited = {false};
-  visited[p.first][p.second] = true;
   int count = 0;
+  class LibertyHandler {
+    int& c_;
+   public:
+    LibertyHandler(int& c) : c_(c) {}
 
-  while (ssize > 0) {
-    pos next = s[--ssize];
+    void handlePiece(int a, int b) {}
 
-    int a = next.first;
-    int b = next.second;
+    void handleOpp(int a, int b) {};
 
-    for (int i = 0; i < 4; ++i) {
-      int x = a + dirs[0][i];
-      int y = b + dirs[1][i];
-      if (!inBounds({x, y}) || visited[x][y]) {
-        continue;
-      }
-
-      visited[x][y] = true;
-      if (board_[x][y] == 0) {
-        count++;
-      }
-
-      if (board_[x][y] == color) {
-        s[ssize++] = {x, y};
-      }
+    bool handleLiberty(int a, int b) {
+      c_++;
+      return false;
     }
-  }
+  };
+
+  floodfill(p, board_[p.first][p.second], LibertyHandler(count));
 
   return count;
+}
+
+bool Board::hasLiberties(pos p, int lib) const {
+  int count = 0;
+  class LibertyHandler {
+    int& c_;
+    int lib_;
+   public:
+    LibertyHandler(int& c, int lib) : c_(c), lib_(lib) {}
+
+    void handlePiece(int a, int b) {}
+
+    void handleOpp(int a, int b) {};
+
+    bool handleLiberty(int a, int b) {
+      c_++;
+      return c_ > lib_;
+    }
+  };
+
+  if (!floodfill(p, board_[p.first][p.second], LibertyHandler(count, lib))) {
+    return false;
+  }
+
+  return count == lib;
 }
 
 vector<pos> Board::fixAtari(pos p, int playerColor) const {
@@ -113,8 +115,8 @@ vector<pos> Board::fixAtari(pos p, int playerColor) const {
   array<array<bool, SIZE>, SIZE> visited = {false};
   visited[p.first][p.second] = true;
   pos lib = p;
-  vector<pos> touching;
-  touching.reserve(SIZE * SIZE);
+  array<pos, SIZE * SIZE> touching;
+  int tsize = 0;
 
   while (ssize > 0) {
     pos next = s[--ssize];
@@ -137,7 +139,7 @@ vector<pos> Board::fixAtari(pos p, int playerColor) const {
       } else if (board_[x][y] == color) {
         s[ssize++] = {x, y};
       } else if (color == playerColor) {
-        touching.emplace_back(x, y);
+        touching[tsize++] = {x, y};
       }
       visited[x][y] = true;
     }
@@ -155,8 +157,8 @@ vector<pos> Board::fixAtari(pos p, int playerColor) const {
   }
 
   // otherwise, try to counter capture
-  for (auto p : touching) {
-    vector<pos> capture = fixAtari(p, playerColor);
+  for (int i = 0; i < tsize; i++) {
+    vector<pos> capture = fixAtari(touching[i], playerColor);
     if (!capture.empty()) {
       answers.push_back(capture.back());
     }
@@ -190,8 +192,9 @@ vector<Move> Board::getValidMoves(int color, const std::unordered_set<size_t>& p
         if (board_[x][y] == color) {
           continue;
         }
-        auto captured = getCaptured({x, y}, board_[x][y]);
-        if (!captured.empty()) {
+
+        bool captured = isCaptured({x, y}, board_[x][y]);
+        if (captured) {
           captures = true;
         }
       }
@@ -221,8 +224,7 @@ bool Board::isSuicide(const Move& move) const {
   int c = move.getColor();
   board_[p.first][p.second] = c;
 
-  auto captured = getCaptured(p, c);
-  if (captured.empty()) {
+  if (!isCaptured(p, c)) {
     board_[p.first][p.second] = 0;
     return false;
   }
@@ -236,8 +238,7 @@ bool Board::isSuicide(const Move& move) const {
     if (board_[x][y] == c) {
       continue;
     }
-    auto enemyCaptured = getCaptured({x, y}, board_[x][y]);
-    if (!enemyCaptured.empty()) {
+    if (isCaptured({x, y}, board_[x][y])) {
       board_[p.first][p.second] = 0;
       return false;
     }

@@ -13,7 +13,9 @@ class Player {
   // GoGui analyze commands
   virtual std::vector<std::pair<Move, std::string>> moveProbabilities() const;
   virtual std::vector<std::pair<Move, std::string>> moveVisits() const;
-  virtual std::vector<std::pair<Move, std::string>> movePriors() const;
+  virtual std::vector<std::pair<Move, std::string>> movePriorVisits() const;
+  virtual std::vector<std::pair<Move, std::string>> movePriorProbabilities() const;
+  virtual std::vector<pos> primaryVariation() const;
 };
 
 std::ostream& operator<<(std::ostream& s, const Player& p);

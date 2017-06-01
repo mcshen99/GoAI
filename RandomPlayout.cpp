@@ -14,6 +14,7 @@ Move RandomPlayout::move(
     const unordered_set<size_t>& history,
     const std::vector<Move>& lastMoves) {
   vector<pos> heuristicMoves;
+  heuristicMoves.reserve(18);
   for (auto& m : lastMoves) {
     int x = m.getCoor().first;
     int y = m.getCoor().second;
@@ -120,7 +121,7 @@ bool RandomPlayout::isGroup(const Board& board, const Move& m) {
 bool RandomPlayout::isAtari(const Board& board, const Move& m) {
   return Board::placeAndTest(
       board, {m}, [&m](const Board& b) {
-        return b.liberties(m.getCoor()) == 1;
+        return b.hasLiberties(m.getCoor(), 1);
       });
 }
 

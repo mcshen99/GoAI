@@ -191,7 +191,11 @@ class Gtp {
 
   pspairs move_visits();
 
+  pspairs move_prior_probabilities();
+
   pspairs move_prior_visits();
+
+  std::vector<pos> primary_variation();
 
   std::set<std::string> list_commands() const {
     return {
@@ -210,7 +214,9 @@ class Gtp {
         "gogui-analyze_commands",
         "move_probabilities",
         "move_visits",
-        "move_prior_visits"
+        "move_prior_probabilities",
+        "move_prior_visits",
+        "primary_variation"
     };
   };
 
@@ -219,6 +225,8 @@ class Gtp {
         "pspairs/Move Probabilities/move_probabilities",
         "pspairs/Move Visits/move_visits",
         "pspairs/Move Prior Visits/move_prior_visits",
+        "pspairs/Move Prior Probabilities/move_prior_probabilities",
+        "var/Primary Variation/primary_variation",
     };
   }
 
@@ -241,4 +249,6 @@ class Gtp {
   static std::string response(const vertex& v);
 
   static std::string response(const pspairs& p);
+
+  static std::string response(const std::vector<pos>& p);
 };

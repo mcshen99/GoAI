@@ -115,8 +115,12 @@ bool Gtp::process(const string& input, string& output) {
       output = wrap(id, response(move_probabilities()));
     } else if (cmd == "move_visits") {
       output = wrap(id, response(move_visits()));
+    } else if (cmd == "move_prior_probabilities") {
+      output = wrap(id, response(move_prior_probabilities()));
     } else if (cmd == "move_prior_visits") {
       output = wrap(id, response(move_prior_visits()));
+    } else if (cmd == "primary_variation") {
+      output = wrap(id, response(primary_variation()));
     } else {
       throw GtpException("unknown command");
     }
@@ -252,8 +256,16 @@ Gtp::pspairs Gtp::move_visits() {
   return game_.getPlayers().at(game_.getLastPlayer())->moveVisits();
 }
 
+Gtp::pspairs Gtp::move_prior_probabilities() {
+  return game_.getPlayers().at(game_.getLastPlayer())->movePriorProbabilities();
+}
+
 Gtp::pspairs Gtp::move_prior_visits() {
-  return game_.getPlayers().at(game_.getLastPlayer())->movePriors();
+  return game_.getPlayers().at(game_.getLastPlayer())->movePriorVisits();
+}
+
+vector<pos> Gtp::primary_variation() {
+  return game_.getPlayers().at(game_.getLastPlayer())->primaryVariation();
 }
 
 string Gtp::response() {
@@ -323,6 +335,15 @@ string Gtp::response(const Gtp::pspairs& p) {
   string resp;
   for (auto& line : p) {
     resp += response(line.first) + " " + line.second + "\n";
+  }
+  resp.pop_back();
+  return resp;
+}
+
+std::string Gtp::response(const std::vector<pos>& p) {
+  string resp;
+  for (auto& line : p) {
+    resp += response(line) + "\n";
   }
   resp.pop_back();
   return resp;

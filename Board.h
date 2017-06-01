@@ -23,10 +23,13 @@ struct Board {
   bool isSuicide(const Move& move) const;
 
   int liberties(pos p) const;
+  bool hasLiberties(pos p, int lib) const;
 
   std::vector<Move> getValidMoves(int color, const std::unordered_set<size_t>& playerHistory) const;
 
   std::vector<pos> getCaptured(pos position, int color) const;
+
+  bool isCaptured(pos position, int color) const;
 
   const std::array<std::array<int, SIZE>, SIZE>& getBoard() const;
 
@@ -51,6 +54,52 @@ struct Board {
   // check a box around p if its empty
   bool isEmpty(pos p, int s = 2) const;
 
+  std::vector<pos> fixAtari(pos p, int playerColor) const;
+
+  template<class Handler>
+  bool floodfill(pos position, int color, Handler h) const {
+    if (color == 0) {
+      return false;
+    }
+
+    std::array<pos, SIZE * SIZE> s;
+    int ssize = 0;
+
+    s[ssize++] = position;
+
+    std::array<std::array<bool, SIZE>, SIZE> visited = {false};
+    visited[position.first][position.second] = true;
+
+    while (ssize > 0) {
+      pos next = s[--ssize];
+
+      int a = next.first;
+      int b = next.second;
+      h.handlePiece(a, b);
+
+      for (int i = 0; i < 4; ++i) {
+        int x = a + dirs[0][i];
+        int y = b + dirs[1][i];
+        if (!inBounds({x, y}) || visited[x][y]) {
+          continue;
+        }
+
+        if (board_[x][y] == 0) {
+          if (h.handleLiberty(a, b)) {
+            return false;
+          }
+        } else if (board_[x][y] == color) {
+          s[ssize++] = {x, y};
+        } else {
+          h.handleOpp(a, b);
+        }
+        visited[x][y] = true;
+      }
+    }
+
+    return true;
+  }
+
   template<class Test>
   static bool placeAndTest(const Board& board, std::vector<Move> moves, Test test) {
     for (auto& m : moves) {
@@ -74,8 +123,6 @@ struct Board {
 
     return result;
   }
-
-  std::vector<pos> fixAtari(pos p, int playerColor) const;
 };
 
 std::ostream& operator<<(std::ostream& s, const Board& b);

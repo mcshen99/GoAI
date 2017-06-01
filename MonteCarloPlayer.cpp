@@ -46,11 +46,25 @@ Move MonteCarloPlayer::move(const Board& board, const vector<Move>& history) {
   probs.clear();
   visits.clear();
   priors.clear();
+  priorProbs.clear();
   const auto& next = root.getNext();
   for (const auto& entry : next) {
     probs.emplace_back(entry.first, to_string(entry.second->winPercentage()));
     visits.emplace_back(entry.first, to_string(entry.second->visits()));
     priors.emplace_back(entry.first, to_string(entry.second->priorVisits()));
+    priorProbs.emplace_back(entry.first, to_string(entry.second->priorProbs()));
+  }
+
+  primaryVar.clear();
+  MonteCarloNode* node = root.getNext().at(m).get();
+  while (!node->getNext().empty()) {
+    Move var = node->move();
+    if (var.isPass()) {
+      break;
+    }
+
+    primaryVar.emplace_back(var.getCoor());
+    node = node->getNext().at(var).get();
   }
 
   return m;
@@ -68,6 +82,14 @@ vector<pair<Move, string>> MonteCarloPlayer::moveVisits() const {
   return visits;
 }
 
-vector<pair<Move, string>> MonteCarloPlayer::movePriors() const {
+vector<pair<Move, string>> MonteCarloPlayer::movePriorVisits() const {
   return priors;
+}
+
+std::vector<std::pair<Move, std::string>> MonteCarloPlayer::movePriorProbabilities() const {
+  return priorProbs;
+}
+
+std::vector<pos> MonteCarloPlayer::primaryVariation() const {
+  return primaryVar;
 }

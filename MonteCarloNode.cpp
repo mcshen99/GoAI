@@ -101,6 +101,7 @@ void MonteCarloNode::initNext(
 
   for (const auto& it : moves) {
     next_[it]->w_ = std::min(std::max(0, next_[it]->w_), next_[it]->pn_);
+    next_[it]->pw_ = next_[it]->w_;
     next_[it]->n_ = next_[it]->pn_;
   }
 }

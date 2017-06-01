@@ -12,6 +12,13 @@ std::vector<std::pair<Move, std::string>> Player::moveVisits() const {
   return {};
 }
 
-std::vector<std::pair<Move, std::string>> Player::movePriors() const {
+std::vector<std::pair<Move, std::string>> Player::movePriorVisits() const {
+  return {};
+}
+
+std::vector<std::pair<Move, std::string>> Player::movePriorProbabilities() const {
+  return {};
+}
+std::vector<pos> Player::primaryVariation() const {
   return {};
 }

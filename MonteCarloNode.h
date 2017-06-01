@@ -16,12 +16,13 @@ struct MonteCarloNode {
 
   int w_; // wins for last player
   int n_; // number of times visited
+  int pw_; // prior number of wins
   int pn_; // prior number of times visited
   int p_; // last player (init by parent)
   std::unordered_map<Move, std::shared_ptr<MonteCarloNode>> next_;
 
  public:
-  MonteCarloNode() : w_(0), n_(0), pn_(0), p_(0), next_() {}
+  MonteCarloNode() : w_(0), n_(0), pw_(0), pn_(0), p_(0), next_() {}
 
   double uct(int t);
 
@@ -37,6 +38,10 @@ struct MonteCarloNode {
 
   int priorVisits() {
     return pn_;
+  }
+
+  double priorProbs() {
+    return pw_ * 1.0 / pn_;
   }
 
   const std::unordered_map<Move, std::shared_ptr<MonteCarloNode>>& getNext() {
