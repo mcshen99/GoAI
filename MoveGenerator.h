@@ -20,7 +20,7 @@ class MoveGenerator {
   const Board& board_;
   int color_;
 
-  static std::default_random_engine gen_;
+  static std::minstd_rand gen_;
   static std::uniform_int_distribution<int> dist_;
   static std::uniform_real_distribution<double> real_;
 

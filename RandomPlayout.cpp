@@ -4,6 +4,7 @@
 
 using namespace std;
 
+minstd_rand RandomPlayout::gen_;
 const int RandomPlayout::dirs[2][4] = {{1, -1, 0, 0}, {0, 0, 1, -1}};
 
 RandomPlayout::RandomPlayout(vector<double> komi) : komi_(komi) {}
@@ -11,24 +12,26 @@ RandomPlayout::RandomPlayout(vector<double> komi) : komi_(komi) {}
 Move RandomPlayout::move(
     const Board& board,
     int color,
-    const unordered_set<size_t>& history,
+    const unordered_set<size_t>& seen,
     const std::vector<Move>& lastMoves) {
   vector<pos> heuristicMoves;
   heuristicMoves.reserve(18);
   for (auto& m : lastMoves) {
     int x = m.getCoor().first;
     int y = m.getCoor().second;
+    size_t start = heuristicMoves.size();
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
         heuristicMoves.emplace_back(x + i, y + j);
       }
     }
+    std::shuffle(heuristicMoves.begin() + start, heuristicMoves.end(), gen_);
   }
 
   MoveGenerator moveGenerator(board, color, heuristicMoves);
   for (auto p = moveGenerator.next(); !p.first; p = moveGenerator.next()) {
     Move m = p.second;
-    if (isOkMove(board, m, history)) {
+    if (isOkMove(board, m, seen)) {
       return m;
     }
   }
@@ -39,23 +42,23 @@ Move RandomPlayout::move(
 int RandomPlayout::simulate(
     Board& board,
     int player,
-    std::pair<Move, Move> last,
-    array<unordered_set<size_t>, 2>& history) {
-  //if 2 players pass, game ends
-  //need scoring phase, everything should be alive (don't put in locations), don't mark dead, add komi (constructor)
+    const vector<Move>& history,
+    array<unordered_set<size_t>, 2>& seen,
+    unordered_set<Move>& rave) {
+  // if 2 players pass, game ends
   bool lastPass = false;
 
   deque<Move> lastMoves;
-  if (!last.first.isPass()) {
-    lastMoves.push_back(last.first);
+  if (history.size() >= 2) {
+    lastMoves.push_back(history[history.size() - 2]);
   }
 
-  if (!last.second.isPass()) {
-    lastMoves.push_back(last.second);
+  if (history.size() >= 1) {
+    lastMoves.push_back(history[history.size() - 1]);
   }
 
   for (int count = 0; count < SIZE * SIZE * 3 / 2; ++count) {
-    Move m = move(board, player + 1, history[(player + 1) % 2], {lastMoves.begin(), lastMoves.end()});
+    Move m = move(board, player + 1, seen[(player + 1) % 2], {lastMoves.begin(), lastMoves.end()});
     if (m.isPass()) {
       if (lastPass) {
         break;
@@ -66,7 +69,9 @@ int RandomPlayout::simulate(
       lastPass = false;
       board.move(m);
       lastMoves.push_back(m);
-      history[(player + 1) % 2].insert(board.getHash());
+      seen[(player + 1) % 2].insert(board.getHash());
+
+      rave.insert(m);
       if (lastMoves.size() > 2) {
         lastMoves.pop_front();
       }
@@ -189,7 +194,7 @@ bool RandomPlayout::isEyeFilling(const Board& board, const Move& m) {
   return count <= 1 + center;
 }
 
-bool RandomPlayout::isOkMove(const Board& board, const Move& m, const unordered_set<size_t>& history) {
-  return board.canMove(m) && history.find(board.getHash(m)) == history.end() && !isEyeFilling(board, m)
+bool RandomPlayout::isOkMove(const Board& board, const Move& m, const unordered_set<size_t>& seen) {
+  return board.canMove(m) && seen.find(board.getHash(m)) == seen.end() && !isEyeFilling(board, m)
       && !(isGroup(board, m) && isAtari(board, m) && !isCapture(board, m));
 }

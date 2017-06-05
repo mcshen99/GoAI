@@ -8,59 +8,74 @@
 #include <unordered_map>
 #include <vector>
 
-struct MonteCarloNode {
- private:
-  const int kN = 2; // visit kN times before expanding
-  static std::default_random_engine gen_;
-  static std::uniform_int_distribution<int> dist_;
+class MonteCarloNode;
+struct MonteCarloContext {
+  std::vector<Move> history;
+  std::vector<MonteCarloNode*> parents;
+  std::array<std::unordered_set<size_t>, 2> seen;
+  std::unordered_set<Move> rave;
+};
 
-  int w_; // wins for last player
+class MonteCarloNode {
+ private:
+  const int kM = 50; // prior N which represents the confidence in our priors
+  const int kN = 2; // visit kN times before expanding
+  const double kRaveBias = 1.0 / 3500;
+
+  double q_; // q value, the "probability" for last player
   int n_; // number of times visited
-  int pw_; // prior number of wins
-  int pn_; // prior number of times visited
+  double rq_; // rave q value
+  int rn_; // rave n value
+  double pq_; // prior q value
   int p_; // last player (init by parent)
   std::unordered_map<Move, std::shared_ptr<MonteCarloNode>> next_;
 
  public:
-  MonteCarloNode() : w_(0), n_(0), pw_(0), pn_(0), p_(0), next_() {}
+  MonteCarloNode() : q_(0), n_(0), rq_(0), rn_(0), pq_(0), p_(0),  next_() {}
 
-  double uct(int t);
+  double eval(int t);
 
   Move move();
 
-  double winPercentage() {
-    return w_ * 1.0 / n_;
+  double winProbability() {
+    return q_;
   }
 
   int visits() {
     return n_;
   }
 
-  int priorVisits() {
-    return pn_;
+  double priorProbs() {
+    return pq_;
   }
 
-  double priorProbs() {
-    return pw_ * 1.0 / pn_;
+  double raveVisits() {
+    return rn_;
+  }
+
+  double raveWinProbability() {
+    return rq_;
   }
 
   const std::unordered_map<Move, std::shared_ptr<MonteCarloNode>>& getNext() {
     return next_;
   };
 
+  void update(double z);
+  void updateRave(double z);
+  void updateRaveChildren(const std::unordered_set<Move>& rave, int winner);
+
   void initNext(
       const Board& board,
       int player,
       const std::vector<double>& komi,
-      std::pair<Move, Move> last,
-      std::array<std::unordered_set<size_t>, 2>& history);
+      const MonteCarloContext& context);
 
   int select(
       Board& board,
       int player,
       const std::vector<double>& komi,
-      std::pair<Move, Move> last,
-      std::array<std::unordered_set<size_t>, 2>& history);
+      MonteCarloContext& context);
 
-  static std::array<std::array<int, SIZE>, SIZE> cfgDistance(const Board& board, const Move& m);
+  static std::array<std::array<int, SIZE>, SIZE> cfgDistance(const Board& board, const std::vector<Move>& m);
 };

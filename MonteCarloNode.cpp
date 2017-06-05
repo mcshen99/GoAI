@@ -3,16 +3,36 @@
 
 using namespace std;
 
-//idek if these numbers are right
-default_random_engine MonteCarloNode::gen_(1776);
-uniform_int_distribution<int> MonteCarloNode::dist_(0, 10000);
-
-double MonteCarloNode::uct(int t) {
+double MonteCarloNode::eval(int t) {
   if (n_ == 0) {
-    return 10000; //TODO: change later
+    // should never reach here
+    return 10000;
   }
 
-  return ((double) w_) / n_ + 0.45 * std::sqrt(std::log(t) / n_);
+  double beta = rn_ / (rn_ + n_ + rn_ * n_ * kRaveBias);
+  return beta * rq_ + (1 - beta) * q_;
+}
+
+void MonteCarloNode::update(double z) {
+  n_++;
+  q_ += (z - q_) / n_;
+}
+
+void MonteCarloNode::updateRave(double z) {
+  rn_++;
+  rq_ += (z - rq_) / rn_;
+}
+
+void MonteCarloNode::updateRaveChildren(const unordered_set<Move>& rave, int winner) {
+  for (const auto& it : next_) {
+    if (rave.find(it.first) != rave.end()) {
+      if (it.second->p_ == winner) {
+        it.second->updateRave(1.0);
+      } else {
+        it.second->updateRave(0.0);
+      }
+    }
+  }
 }
 
 Move MonteCarloNode::move() {
@@ -28,35 +48,32 @@ void MonteCarloNode::initNext(
     const Board& board,
     int player,
     const vector<double>& komi,
-    std::pair<Move, Move> last,
-    std::array<std::unordered_set<size_t>, 2>& history) {
-  const auto& playerHistory = history[((player + 1) % 2)];
+    const MonteCarloContext& context) {
+  const auto& playerHistory = context.seen[((player + 1) % 2)];
   int color = player + 1;
   vector<Move> moves = board.getValidMoves(color, playerHistory);
 
   //for each move, add to next
-  auto cfgMap = cfgDistance(board, last.second);
+  auto cfgMap = cfgDistance(board, context.history);
 
   for (const auto& it : moves) {
     next_[it] = std::make_shared<MonteCarloNode>();
     next_[it]->p_ = player;
-    next_[it]->w_ = 50;
-    next_[it]->pn_ = 100;
+    next_[it]->q_ = 0.5;
     if (it.isPass()) {
-      next_[it]->w_ -= 50;
       continue;
     }
 
     pos p = it.getCoor();
-    if (!last.second.isPass()) {
+    if (!context.history.empty()) {
       int dist = cfgMap[p.first][p.second] - 1;
       if (dist < 3) {
         if (dist == 2) {
-          next_[it]->w_ += 8;
+          next_[it]->q_ += 0.08;
         } else if (dist == 1) {
-          next_[it]->w_ += 22;
+          next_[it]->q_ += 0.22;
         } else {
-          next_[it]->w_ += 24;
+          next_[it]->q_ += 0.24;
         }
       }
     }
@@ -64,9 +81,9 @@ void MonteCarloNode::initNext(
     int height = std::min(std::min(p.first, p.second), std::min(SIZE - 1 - p.first, SIZE - 1 - p.second));
     if (height <= 2 && board.isEmpty(p)) {
       if (height <= 1) {
-        next_[it]->w_ -= 10;
+        next_[it]->q_ -= 0.10;
       } else {
-        next_[it]->w_ += 10;
+        next_[it]->q_ += 0.10;
       }
     }
   }
@@ -83,7 +100,7 @@ void MonteCarloNode::initNext(
     if (RandomPlayout::isOkMove(board, m, playerHistory)) {
       auto it = next_.find(m);
       if (it != next_.end()) {
-        it->second->w_ += 15;
+        it->second->q_ += 0.15;
       }
     }
   }
@@ -94,15 +111,17 @@ void MonteCarloNode::initNext(
     if (RandomPlayout::isOkMove(board, m, playerHistory)) {
       auto it = next_.find(m);
       if (it != next_.end()) {
-        it->second->w_ += 10;
+        it->second->q_ += 0.10;
       }
     }
   }
 
   for (const auto& it : moves) {
-    next_[it]->w_ = std::min(std::max(0, next_[it]->w_), next_[it]->pn_);
-    next_[it]->pw_ = next_[it]->w_;
-    next_[it]->n_ = next_[it]->pn_;
+    next_[it]->q_ = std::min(std::max(0.0, next_[it]->q_), 1.0);
+    next_[it]->pq_ = next_[it]->q_;
+    next_[it]->rq_ = next_[it]->q_;
+    next_[it]->rn_ = kM;
+    next_[it]->n_ = kM;
   }
 }
 
@@ -110,50 +129,49 @@ int MonteCarloNode::select(
     Board& board,
     int player,
     const vector<double>& komi,
-    std::pair<Move, Move> last,
-    array<unordered_set<size_t>, 2>& history) {
-  if (n_ < kN + pn_) {
+    MonteCarloContext& context) {
+  if (n_ < kN + kM) {
     RandomPlayout rp(komi);
-    int winner = rp.simulate(board, player, last, history);
-    if (p_ == winner) {
-      w_++;
-    }
+    int winner = rp.simulate(board, player, context.history, context.seen, context.rave);
 
-    n_++;
+    if (p_ == winner) {
+      update(1.0);
+    } else {
+      update(0.0);
+    }
     return winner;
   }
 
-  if (n_ == kN + pn_) {
-    initNext(board, player, komi, last, history);
-  }
-
-  if (next_.empty()) {
-    int winner = player;
-    if (p_ == winner) {
-      w_++;
-    }
-
-    n_++;
-    return winner;
+  if (n_ == kN + kM) {
+    initNext(board, player, komi, context);
   }
 
   auto element = max_element(
       next_.begin(), next_.end(), [this](const auto& a, const auto& b) {
-        return a.second->uct(n_) < b.second->uct(n_);
+        return a.second->eval(n_) < b.second->eval(n_);
       });
 
   board.move(element->first);
-  history[((player + 1) % 2)].insert(board.getHash());
-  int winner = element->second->select(board, (player + 1) % 2, komi, {last.second, element->first}, history);
+  context.seen[((player + 1) % 2)].insert(board.getHash());
+  context.history.push_back(element->first);
+  context.parents.push_back(this);
 
-  if (winner == p_) {
-    w_++;
+  // state of history, seen, and parents are undefined after select
+  int winner = element->second->select(board, (player + 1) % 2, komi, context);
+
+  // rave contains everything after
+  updateRaveChildren(context.rave, winner);
+  context.rave.insert(element->first);
+
+  if (p_ == winner) {
+    update(1.0);
+  } else {
+    update(0.0);
   }
-  n_++;
   return winner;
 }
 
-std::array<std::array<int, SIZE>, SIZE> MonteCarloNode::cfgDistance(const Board& board, const Move& m) {
+std::array<std::array<int, SIZE>, SIZE> MonteCarloNode::cfgDistance(const Board& board, const vector<Move>& history) {
   // common fate graph
   std::array<std::array<int, SIZE>, SIZE> cfgMap;
   for (int i = 0; i < SIZE; i++) {
@@ -162,10 +180,11 @@ std::array<std::array<int, SIZE>, SIZE> MonteCarloNode::cfgDistance(const Board&
     }
   }
 
-  if (m.isPass()) {
+  if (history.empty() || history.back().isPass()) {
     return cfgMap;
   }
 
+  const Move& m = history.back();
   pos p = m.getCoor();
   cfgMap[p.first][p.second] = 0;
 

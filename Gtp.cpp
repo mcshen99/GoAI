@@ -115,10 +115,12 @@ bool Gtp::process(const string& input, string& output) {
       output = wrap(id, response(move_probabilities()));
     } else if (cmd == "move_visits") {
       output = wrap(id, response(move_visits()));
+    } else if (cmd == "rave_move_probabilities") {
+      output = wrap(id, response(rave_move_probabilities()));
+    } else if (cmd == "rave_move_visits") {
+      output = wrap(id, response(rave_move_visits()));
     } else if (cmd == "move_prior_probabilities") {
       output = wrap(id, response(move_prior_probabilities()));
-    } else if (cmd == "move_prior_visits") {
-      output = wrap(id, response(move_prior_visits()));
     } else if (cmd == "primary_variation") {
       output = wrap(id, response(primary_variation()));
     } else {
@@ -256,12 +258,16 @@ Gtp::pspairs Gtp::move_visits() {
   return game_.getPlayers().at(game_.getLastPlayer())->moveVisits();
 }
 
-Gtp::pspairs Gtp::move_prior_probabilities() {
-  return game_.getPlayers().at(game_.getLastPlayer())->movePriorProbabilities();
+Gtp::pspairs Gtp::rave_move_probabilities() {
+  return game_.getPlayers().at(game_.getLastPlayer())->raveMoveProbabilities();
 }
 
-Gtp::pspairs Gtp::move_prior_visits() {
-  return game_.getPlayers().at(game_.getLastPlayer())->movePriorVisits();
+Gtp::pspairs Gtp::rave_move_visits() {
+  return game_.getPlayers().at(game_.getLastPlayer())->raveMoveVisits();
+}
+
+Gtp::pspairs Gtp::move_prior_probabilities() {
+  return game_.getPlayers().at(game_.getLastPlayer())->movePriorProbabilities();
 }
 
 vector<pos> Gtp::primary_variation() {

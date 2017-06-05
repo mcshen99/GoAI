@@ -1,10 +1,8 @@
 #include "MoveGenerator.h"
 
-using std::default_random_engine;
-using std::uniform_int_distribution;
-using std::uniform_real_distribution;
+using namespace std;
 
-default_random_engine MoveGenerator::gen_;
+minstd_rand MoveGenerator::gen_;
 uniform_int_distribution<int> MoveGenerator::dist_(0, SIZE - 1);
 uniform_real_distribution<double> MoveGenerator::real_(0.0, 1.0);
 

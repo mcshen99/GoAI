@@ -191,9 +191,11 @@ class Gtp {
 
   pspairs move_visits();
 
-  pspairs move_prior_probabilities();
+  pspairs rave_move_probabilities();
 
-  pspairs move_prior_visits();
+  pspairs rave_move_visits();
+
+  pspairs move_prior_probabilities();
 
   std::vector<pos> primary_variation();
 
@@ -214,8 +216,9 @@ class Gtp {
         "gogui-analyze_commands",
         "move_probabilities",
         "move_visits",
+        "rave_move_probabilities",
+        "rave_move_visits",
         "move_prior_probabilities",
-        "move_prior_visits",
         "primary_variation"
     };
   };
@@ -224,7 +227,8 @@ class Gtp {
     return {
         "pspairs/Move Probabilities/move_probabilities",
         "pspairs/Move Visits/move_visits",
-        "pspairs/Move Prior Visits/move_prior_visits",
+        "pspairs/Rave Move Probabilities/rave_move_probabilities",
+        "pspairs/Rave Move Visits/rave_move_visits",
         "pspairs/Move Prior Probabilities/move_prior_probabilities",
         "var/Primary Variation/primary_variation",
     };

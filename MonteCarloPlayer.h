@@ -16,7 +16,8 @@ class MonteCarloPlayer : public Player {
   pspairs probs;
   pspairs visits;
   pspairs priors;
-  pspairs priorProbs;
+  pspairs raveProbs;
+  pspairs raveVisits;
   std::vector<pos> primaryVar;
 
   std::ostringstream log;
@@ -35,7 +36,8 @@ class MonteCarloPlayer : public Player {
   // GoGui analyze commands
   virtual pspairs moveProbabilities() const override;
   virtual pspairs moveVisits() const override;
-  virtual pspairs movePriorVisits() const override;
   virtual pspairs movePriorProbabilities() const override;
+  virtual pspairs raveMoveVisits() const override;
+  virtual pspairs raveMoveProbabilities() const override;
   virtual std::vector<pos> primaryVariation() const override;
 };
